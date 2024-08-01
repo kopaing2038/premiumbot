@@ -41,6 +41,34 @@ async def cbb_handler(client: Client, query: types.CallbackQuery):
     elif query.data == "pages":
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
 
+    elif query.data == "popularmovies":
+        buttons = [[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data='start'),
+        ]]
+        popular_movies = ia.get_popular100_movies()[:25]
+        response_text = "<b>Top 25 Popular Movies:</b>\n\n"
+        for idx, movie in enumerate(popular_movies, start=1):
+            title = movie.get('title')
+            response_text += f"{idx}. {title}\n"
+            reply_markup = InlineKeyboardMarkup(buttons)
+            await query.message.edit_text(
+                text=response_text,
+                reply_markup=reply_markup,
+                parse_mode=enums.ParseMode.HTML
+            )
+
+    elif query.data == "popmovie":
+        popular_movies = ia.get_popular100_movies()[:25]
+        response_text = "<b>Top 25 Popular Movies:</b>\n\n"
+        for idx, movie in enumerate(popular_movies, start=1):
+            title = movie.get('title')
+            response_text += f"{idx}. {title}\n"
+            await query.message.edit_text(
+                text=response_text,
+                parse_mode=enums.ParseMode.HTML
+            )
+
+
     elif query.data == "start":
         buttons = [[
             types.InlineKeyboardButton('🔖 Join Our Group to Use Me', url="https://t.me/MKS_RequestGroup")
