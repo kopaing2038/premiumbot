@@ -27,7 +27,7 @@ def get_config(key: str, default: str = None, is_bool: bool = False) -> Union[st
 
 class Config:
 
-    BOT_TOKEN = get_config("BOT_TOKEN", "7327842322:AAHfB-NBAQQOXE8O-NiBAMjfBisHax7CUqw")
+    BOT_TOKEN = get_config("BOT_TOKEN", "6670656226:AAF5nPbLtsKN0MGtnNB-oXsw0D8eKB4mnaU")
     API_ID = int(get_config("API_ID", '7880210'))
     API_HASH = get_config("API_HASH", '1bb4b2ff1489cc06af37cba448c8cce9')
     START_IMG = environ.get('START_IMG', 'https://graph.org/file/4dad0cc16f190468454ee.jpg')
@@ -39,7 +39,7 @@ class Config:
     BOT_NAME = get_config("BOT_NAME", "FILTER_BOT")
 
     LOG_CHANNEL = int(get_config("LOG_CHANNEL", '-1001254905376'))
-    FORCE_SUB_CHANNEL = int(get_config("FORCE_SUB_CHANNEL", '-1001254905376'))
+    FORCE_SUB_CHANNEL = int(get_config("FORCE_SUB_CHANNEL", '-1002220103327'))
     REQUEST_CHANNEL = int(get_config("REQUEST_CHANNEL", '-1002220103327'))
     PREMIUMGP = int(environ.get('PREMIUMGP', '-1002075603295'))
 
@@ -60,7 +60,7 @@ class Config:
 ,
     )
 
-    CHANNELS = make_list(get_config("CHANNELS", '-1001254905376'), True)  # type: ignore
+    CHANNELS = make_list(get_config("CHANNELS", '-1002116719096 -1002030996299 -1001458641629 -1001293304343 -1001436098649 -1001756911870 -1001482882679 -1001949716878 -1002170292565 -1002172466790 -1001707824716 -1001673189660'), True)  # type: ignore
     ADMINS = make_list(get_config("ADMINS", "6656933277"), True)  # type: ignore
     ADMINS += [1113630298]
     SUDO_USERS = ADMINS
