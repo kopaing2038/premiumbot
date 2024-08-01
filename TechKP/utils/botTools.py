@@ -51,7 +51,7 @@ async def get_cap(settings, remaining_seconds, files, query, total_results, sear
             cap = IMDB_CAP
             cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
             for file in files:
-                cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
         else:
             if settings["IMDB"]:  # type: ignore
                 imdb = await get_poster(search, file=(files[0])["file_name"])
@@ -68,17 +68,17 @@ async def get_cap(settings, remaining_seconds, files, query, total_results, sear
                 )
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
             else:
                 cap = f"○ **Query**:{search}\n○ **Total Results**: {total_results}\n○ **Request By**: {message.from_user.mention}\n○ **Result Show In**: `{remaining} seconds`"
                 cap+="<b><u>🍿 Your Movie Files 👇</u></b>\n\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
     else:
         cap = f"○ **Query**:{search}\n○ **Total Results**: {total_results}\n○ **Request By**: {message.from_user.mention}\n○ **Result Show In**: `{remaining} seconds`"
         cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
         for file in files:
-            cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+            cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
     return cap
 
 
@@ -89,7 +89,7 @@ async def get_cap2(settings, remaining_seconds, files, query, total_results, sea
             cap = IMDB_CAP2
             cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
             for file in files:
-                cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
         else:
             if settings["IMDB"]:  # type: ignore
                 imdb = await get_poster(search, file=(files[0])["file_name"])
@@ -106,17 +106,17 @@ async def get_cap2(settings, remaining_seconds, files, query, total_results, sea
                 )
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
             else:
                 cap = f"○ **Query**:{search}\n○ **Total Results**: {total_results}\n○ **Request By**: {message.from_user.mention}\n○ **Result Show In**: `{remaining} seconds`"
                 cap+="<b><u>🍿 Your Movie Files 👇</u></b>\n\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
     else:
         cap = f"○ **Query**:{search}\n○ **Total Results**: {total_results}\n○ **Request By**: {message.from_user.mention}\n○ **Result Show In**: `{remaining} seconds`"
         cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
         for file in files:
-            cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+            cap += f"""<b>\n○ <a href="https://telegram.me/{Cache.U_NAME}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
     return cap
 
 
