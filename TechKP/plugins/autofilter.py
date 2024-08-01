@@ -96,7 +96,7 @@ async def group_search(client, message):
 
 
 
-@Client.on_message(filters.private & filters.text & filters.incoming, group=-2) 
+@Client.on_message(filters.private & filters.text & filters.incoming) 
 async def evpm_text(bot, message):
     content = message.text
     user = message.from_user.first_name
