@@ -8,7 +8,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, 
 import asyncio
 from telegraph import upload_file
 from TechKP.utils.botTools import get_file_id
-from TechKP.pluginsautofilter import auto_filter
+from TechKP.plugins.autofilter import auto_filter
 
 
 logger = logging.getLogger(__name__)
