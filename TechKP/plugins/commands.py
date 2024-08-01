@@ -451,9 +451,8 @@ async def help_handler(bot: Client, msg: types.Message):
 async def get_stats(_, msg: types.Message):
     count = await a_filter.col.count_documents({})  # type: ignore
     count2 = await b_filter.col.count_documents({})  # type: ignore
-    #size = (await a_filter.db.command("dbstats"))["dataSize"]  # type: ignore
     users = await usersDB.total_users_count()
-    free = 536870912 - size
+
     await msg.reply(
         f"**Stats**\n\n**Total Files**: `{count}`"
         f"**Total Files**: `{count2}`"
