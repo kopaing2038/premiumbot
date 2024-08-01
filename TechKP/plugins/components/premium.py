@@ -311,8 +311,12 @@ async def premium_users_next_page(client, query):
 
     text = ""
     for user_num, user in enumerate(users, start=offset+1):
-        user_info = await client.get_users(user['_id'])  # No need to subscript
-        text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        try:
+            user_info = await client.get_users(user['_id'])
+            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        except PeerIdInvalid:
+            logging.warning(f"Invalid user ID: {user['_id']}")
+            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
 
 @Client.on_message(filters.private & filters.command('free_users') & filters.user(Config.ADMINS))
@@ -331,8 +335,12 @@ async def free_list_users(client, message):
         ]]
     text = ""
     for user_num, user in enumerate(users, start=1):
-        user_info = await client.get_users(user['_id'])  # No need to subscript
-        text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        try:
+            user_info = await client.get_users(user['_id'])
+            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        except PeerIdInvalid:
+            logging.warning(f"Invalid user ID: {user['_id']}")
+            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
     await message.reply(text, reply_markup=InlineKeyboardMarkup(btn))
 
 @Client.on_callback_query(filters.regex(r"^free_users_next"))
@@ -361,6 +369,10 @@ async def free_users_next_page(client, query):
 
     text = ""
     for user_num, user in enumerate(users, start=offset+1):
-        user_info = await client.get_users(user['_id'])  # No need to subscript
-        text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        try:
+            user_info = await client.get_users(user['_id'])
+            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        except PeerIdInvalid:
+            logging.warning(f"Invalid user ID: {user['_id']}")
+            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
