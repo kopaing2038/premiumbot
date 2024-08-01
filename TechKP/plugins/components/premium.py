@@ -15,6 +15,10 @@ from TechKP.utils.cache import Cache
 from TechKP.utils.botTools import get_size, get_status, get_seconds, get_mmks, handle_next_back
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorClient
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 @Client.on_message(filters.command("premium") & filters.user(Config.ADMINS))
 async def add_premium(client, message):
@@ -269,9 +273,16 @@ async def premium_list_users(client, message):
         ]]
     text = ""
     for user_num, user in enumerate(users, start=1):
-        user_info = await client.get_users(user['_id'])  # No need to subscript
-        text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        try:
+            user_info = await client.get_users(user['_id'])
+            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        except PeerIdInvalid:
+            logging.warning(f"Invalid user ID: {user['_id']}")
+            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
     await message.reply(text, reply_markup=InlineKeyboardMarkup(btn))
+
+
+
 
 @Client.on_callback_query(filters.regex(r"^premium_users_next"))
 async def premium_users_next_page(client, query):
