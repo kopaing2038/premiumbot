@@ -147,7 +147,7 @@ async def telegraph_upload(bot, update):
     
 
 
-#@Client.on_message(filters.private & filters.text & filters.incoming)
+@Client.on_message(filters.private & filters.text & filters.incoming, group=-3)
 async def evpm_tedvxt(bot, message):
     content = message.text
     user = message.from_user.first_name
