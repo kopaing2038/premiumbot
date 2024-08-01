@@ -9,7 +9,7 @@ import asyncio
 from telegraph import upload_file
 from TechKP.utils.botTools import get_file_id
 from TechKP.plugins.autofilter import auto_filter
-
+from TechKP.config.config import Config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
