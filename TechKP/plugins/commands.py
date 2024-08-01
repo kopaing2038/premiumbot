@@ -455,7 +455,7 @@ async def get_stats(_, msg: types.Message):
 
     await msg.reply(
         f"**Stats**\n\n**Total Files**: `{count}`"
-        f"**Total Files**: `{count2}`"
+        f"\n**Total Files**: `{count2}`"
         f"\nTotal Users: {users}"
     )
 
