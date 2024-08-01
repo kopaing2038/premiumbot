@@ -18,7 +18,10 @@ from ..utils.botTools import (
     get_status,
     handle_next_back
 )
+from imdb import Cinemagoer 
 
+
+imdb_ia = Cinemagoer()
 
 @Client.on_callback_query()
 async def cbb_handler(client: Client, query: types.CallbackQuery):
