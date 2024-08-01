@@ -1121,7 +1121,7 @@ async def request_series_cb_handler(bot: Client, query: types.CallbackQuery):
             if not settings["IS_BUTTON"]:
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
             
     else:
         if settings["IS_BUTTON"]:
@@ -1131,7 +1131,7 @@ async def request_series_cb_handler(bot: Client, query: types.CallbackQuery):
             if not settings.get("DOWNLOAD_BUTTON"):
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
     btn.append([
         types.InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ ᴍᴀɪɴ ᴘᴀɢᴇ", callback_data=f"next_{req}_{key}_{0}"), types.InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ sᴇʀɪᴇs ᴘᴀɢᴇ", callback_data=f"sernext#{key}#{0}#{0}#{req}")])
 
