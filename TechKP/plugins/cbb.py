@@ -1,0 +1,492 @@
+import logging, asyncio, time, pytz, re, os, math, random
+import json
+import pyrogram
+from pyrogram import errors, filters, types, Client, enums
+from TechKP.config.Script import script
+from ..utils.cache import Cache
+from ..utils.logger import LOGGER
+from ..config import Config
+from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
+from ..utils.botTools import (
+    check_fsub,
+    format_buttons,
+    get_size,
+    unpack_new_file_id,
+    FORCE_TEXT,
+    check_verification,
+    get_status,
+    handle_next_back
+)
+
+
+@Client.on_callback_query()
+async def cbb_handler(client: Client, query: types.CallbackQuery):
+    if query.data == "close_data":
+        try:
+            user = query.message.reply_to_message.from_user.id
+        except:
+            user = query.from_user.id
+        if int(user) != 0 and query.from_user.id != int(user):
+            return await query.answer(script.ALRT_TXT, show_alert=True)
+        await query.answer("ᴛʜᴀɴᴋs ꜰᴏʀ ᴄʟᴏsᴇ 🙈")
+        await query.message.delete()
+        try:
+            await query.message.reply_to_message.delete()
+        except:
+            pass
+    elif query.data == "buttons":
+        await query.answer("ɴᴏ ᴍᴏʀᴇ ᴘᴀɢᴇs 😊", show_alert=True)
+
+    elif query.data == "pages":
+        await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
+
+    elif query.data == "start":
+        buttons = [[
+            types.InlineKeyboardButton('🔖 Join Our Group to Use Me', url="https://t.me/MKS_RequestGroup")
+        ],[
+            types.InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
+            types.InlineKeyboardButton('🎗️ ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ', callback_data='premium'),
+        ],[
+            types.InlineKeyboardButton('Iɴʟɪɴᴇ Sᴇᴀʀᴄʜ ☌', switch_inline_query_current_chat=''),
+            types.InlineKeyboardButton('✇ Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs ✇', callback_data='popularmovies')
+        ],[
+            types.InlineKeyboardButton('⌬ Mᴏᴠɪᴇ Gʀᴏᴜᴘ', url=Config.GROUPS_LINK),
+            types.InlineKeyboardButton('✇ Jᴏɪɴ Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ ✇', url=Config.CHANNEL_LINK)
+        ],[
+            types.InlineKeyboardButton('〄 Hᴇʟᴘ', callback_data='help'),
+            types.InlineKeyboardButton('🫠 ᴀʙᴏᴜᴛ 🚩', callback_data='about')
+        ],[
+            types.InlineKeyboardButton('🤞🏻 ʙᴏᴛ ᴏᴡɴᴇʀ 🤡', callback_data='admin')
+        ]]
+        reply_markup = types.InlineKeyboardMarkup(buttons)            
+        await query.edit_message_media(
+            media=types.InputMediaPhoto(
+                media=random.choice(Config.START_IMG),
+                caption=script.START_TXT.format(query.from_user.mention, get_status(), query.from_user.id)
+            ),
+            reply_markup=reply_markup
+        )
+    elif query.data == "admin":
+        buttons = [[
+            InlineKeyboardButton('Sᴏᴜʀᴄᴇ Cᴏᴅᴇ', url="https://t.me/KOPAINGLAY15")
+        ],[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data='start'),
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text=script.OWNER_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+
+    elif query.data == "help":
+        buttons = [[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data='start')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text=script.HELP_TEXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+
+    elif query.data == "premium":
+        userid = query.from_user.id
+        await query.message.edit(script.PREMIUM_TEXT , reply_markup=InlineKeyboardMarkup([
+        [InlineKeyboardButton('🤞🏻 ʟᴏᴡ ᴘʀɪᴄᴇ ᴘʟᴀɴs 🍿', callback_data='plans')],
+        [InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')]
+        ]))
+
+    elif query.data == "plans":
+        userid = query.from_user.id
+        await query.edit_message_media(
+            media=types.InputMediaPhoto(
+                media=random.choice(Config.START_IMG),
+                caption=script.PLAN_TEXT
+            ),
+            reply_markup=InlineKeyboardMarkup([
+        [InlineKeyboardButton('🤞🏻 ʙᴜʏ ᴘʟᴀɴ 🍿', callback_data='buy_plan')],
+        [InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='premium')]
+        ]))
+
+    elif query.data == "buy_plan":
+        userid = query.from_user.id
+        await query.edit_message_media(
+            media=types.InputMediaPhoto(
+                media=Config.PAYMENT_QR,
+                caption=script.BUY_PLAN.format(Cache.B_LINK)
+            ),
+            reply_markup=InlineKeyboardMarkup([
+        [InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='plans')]
+        ]))
+
+    elif query.data == "features":
+        buttons = [[
+            InlineKeyboardButton('📸 ᴛ-ɢʀᴀᴘʜ', callback_data='telegraph'),
+            InlineKeyboardButton('🆎️ ғᴏɴᴛ', callback_data='font')    
+        ],[ 
+            InlineKeyboardButton('ᴜsᴇʀ ᴄᴍᴅ', callback_data='usercmd'),
+            InlineKeyboardButton('ᴀᴅᴍɪɴ ᴄᴍᴅ', callback_data='extra'),
+        ],[ 
+	    InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')
+        ]] 
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(                     
+            text=script.HELP_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+    elif query.data == "extra":
+        buttons = [[
+            InlineKeyboardButton('ᴀᴅᴍɪɴ ᴄᴍᴅ', callback_data='admincmd'),
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data='features')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text=script.EXTRAMOD_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+
+    elif query.data == "admincmd":
+        #if user isnt admin then return
+        if not query.from_user.id in Config.ADMINS:
+            return await query.answer('This Feature Is Only For Admins !' , show_alert=True)
+        buttons = [
+            [InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='features')],
+        ]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text=script.ADMIN_CMD_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML,
+        )
+
+    elif query.data == "usercmd":
+        buttons = [
+            [InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='features')],
+        ]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        await query.message.edit_text(
+            text=script.USER_CMD_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML,
+        )
+
+    elif query.data == 'about':
+        await query.message.edit_text(
+            script.ABOUT_TEXT.format(query.from_user.mention(),Cache.B_LINK),
+            reply_markup = InlineKeyboardMarkup(
+                [[InlineKeyboardButton('⋞ ʜᴏᴍᴇ', callback_data='start')]]
+                ),
+            disable_web_page_preview = True
+        )
+
+    elif query.data == "telegraph":
+        buttons = [[
+            InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='features')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)  
+        await query.message.edit_text(
+            text=script.TELE_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+    elif query.data == "font":
+        buttons = [[
+            InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='features')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons) 
+        await query.message.edit_text(
+            text=script.FONT_TXT,
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+	)
+  
+
+    elif query.data.startswith("show_options"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            types.InlineKeyboardButton("✅️ ᴀᴄᴄᴇᴘᴛ ᴛʜɪꜱ ʀᴇǫᴜᴇꜱᴛ ✅️", callback_data=f"accept#{user_id}#{msg_id}")
+        ],[
+            types.InlineKeyboardButton("🚫 ʀᴇᴊᴇᴄᴛ ᴛʜɪꜱ ʀᴇǫᴜᴇꜱᴛ 🚫", callback_data=f"reject#{user_id}#{msg_id}")
+        ]]
+        try:
+            st = await client.get_chat_member(chnl_id, userid)
+            if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+                await query.message.edit_reply_markup(types.InlineKeyboardMarkup(buttons))
+            elif st.status == enums.ChatMemberStatus.MEMBER:
+                await query.answer(script.ALRT_TXT, show_alert=True)
+        except pyrogram.errors.exceptions.bad_request_400.UserNotParticipant:
+            await query.answer("⚠️ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ ᴍᴇᴍʙᴇʀ ᴏꜰ ᴛʜɪꜱ ᴄʜᴀɴɴᴇʟ, ꜰɪʀꜱᴛ ᴊᴏɪɴ", show_alert=True)
+
+    elif query.data.startswith("reject"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            types.InlineKeyboardButton("✗ ʀᴇᴊᴇᴄᴛ ✗", callback_data=f"rj_alert#{user_id}")
+        ]]
+        btn = [[
+            types.InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(types.InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>sᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴊᴇᴄᴛᴇᴅ 😶</b>", reply_markup=types.InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nsᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴊᴇᴄᴛᴇᴅ 😶</b>", reply_markup=types.InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("accept"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            types.InlineKeyboardButton("😊 ᴀʟʀᴇᴀᴅʏ ᴀᴠᴀɪʟᴀʙʟᴇ 😊", callback_data=f"already_available#{user_id}#{msg_id}")
+        ],[
+            types.InlineKeyboardButton("‼️ ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ ‼️", callback_data=f"not_available#{user_id}#{msg_id}")
+        ],[
+            types.InlineKeyboardButton("🥵 ᴛᴇʟʟ ᴍᴇ ʏᴇᴀʀ 🥵", callback_data=f"year#{user_id}#{msg_id}")
+        ],[
+            types.InlineKeyboardButton("🙃 ᴜᴘʟᴏᴀᴅᴇᴅ ɪɴ 1 ʜᴏᴜʀ 🙃", callback_data=f"upload_in#{user_id}#{msg_id}")
+        ],[
+            types.InlineKeyboardButton("☇ ᴜᴘʟᴏᴀᴅᴇᴅ ☇", callback_data=f"uploaded#{user_id}#{msg_id}")
+        ]]
+        try:
+            st = await client.get_chat_member(chnl_id, userid)
+            if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+                await query.message.edit_reply_markup(types.InlineKeyboardMarkup(buttons))
+            elif st.status == enums.ChatMemberStatus.MEMBER:
+                await query.answer(script.OLD_ALRT_TXT.format(query.from_user.first_name),show_alert=True)
+        except pyrogram.errors.exceptions.bad_request_400.UserNotParticipant:
+            await query.answer("⚠️ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀ ᴍᴇᴍʙᴇʀ ᴏꜰ ᴛʜɪꜱ ᴄʜᴀɴɴᴇʟ, ꜰɪʀꜱᴛ ᴊᴏɪɴ", show_alert=True)
+
+    elif query.data.startswith("not_available"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            InlineKeyboardButton("🚫 ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ 🚫", callback_data=f"na_alert#{user_id}")
+        ]]
+        btn = [[
+            InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>sᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ 😢</b>", reply_markup=InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nsᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ 😢</b>", reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("uploaded"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            InlineKeyboardButton("🙂 ᴜᴘʟᴏᴀᴅᴇᴅ 🙂", callback_data=f"ul_alert#{user_id}")
+        ]]
+        btn = [[
+            InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴜᴘʟᴏᴀᴅᴇᴅ ☺️</b>", reply_markup=InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴜᴘʟᴏᴀᴅᴇᴅ ☺️</b>", reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("already_available"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            InlineKeyboardButton("🫤 ᴀʟʀᴇᴀᴅʏ ᴀᴠᴀɪʟᴀʙʟᴇ 🫤", callback_data=f"aa_alert#{user_id}")
+        ]]
+        btn = [[
+            InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴀʟʀᴇᴀᴅʏ ᴀᴠᴀɪʟᴀʙʟᴇ 😋</b>", reply_markup=InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴀʟʀᴇᴀᴅʏ ᴀᴠᴀɪʟᴀʙʟᴇ 😋</b>", reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("upload_in"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            InlineKeyboardButton("😌 ᴜᴘʟᴏᴀᴅ ɪɴ 1 ʜᴏᴜʀꜱ 😌", callback_data=f"upload_alert#{user_id}")
+        ]]
+        btn = [[
+            InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛ ᴡɪʟʟ ʙᴇ ᴜᴘʟᴏᴀᴅᴇᴅ ᴡɪᴛʜɪɴ 1 ʜᴏᴜʀ 😁</b>", reply_markup=InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛ ᴡɪʟʟ ʙᴇ ᴜᴘʟᴏᴀᴅᴇᴅ ᴡɪᴛʜɪɴ 1 ʜᴏᴜʀ 😁</b>", reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("year"):
+        ident, user_id, msg_id = query.data.split("#")
+        chnl_id = query.message.chat.id
+        userid = query.from_user.id
+        buttons = [[
+            InlineKeyboardButton("⚠️ ᴛᴇʟʟ ᴍᴇ ʏᴇᴀʀꜱ ⚠️", callback_data=f"yrs_alert#{user_id}")
+        ]]
+        btn = [[
+            InlineKeyboardButton("♻️ ᴠɪᴇᴡ sᴛᴀᴛᴜs ♻️", url=f"{query.message.link}")
+        ]]
+        st = await client.get_chat_member(chnl_id, userid)
+        if (st.status == enums.ChatMemberStatus.ADMINISTRATOR) or (st.status == enums.ChatMemberStatus.OWNER):
+            user = await client.get_users(user_id)
+            request = query.message.text
+            await query.answer("Message sent to requester")
+            await query.message.edit_text(f"<s>{request}</s>")
+            await query.message.edit_reply_markup(InlineKeyboardMarkup(buttons))
+            try:
+                await client.send_message(chat_id=user_id, text="<b>ʙʀᴏ ᴘʟᴇᴀꜱᴇ ᴛᴇʟʟ ᴍᴇ ʏᴇᴀʀꜱ, ᴛʜᴇɴ ɪ ᴡɪʟʟ ᴜᴘʟᴏᴀᴅ 😬</b>", reply_markup=InlineKeyboardMarkup(btn))
+            except UserIsBlocked:
+                await client.send_message(Config.REQUEST_CHANNEL, text=f"<b>💥 ʜᴇʟʟᴏ {user.mention},\n\nʙʀᴏ ᴘʟᴇᴀꜱᴇ ᴛᴇʟʟ ᴍᴇ ʏᴇᴀʀꜱ , ᴛʜᴇɴ ɪ ᴡɪʟʟ ᴜᴘʟᴏᴀᴅ 😬</b>", reply_markup=InlineKeyboardMarkup(btn), reply_to_message_id=int(msg_id))
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("rj_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("sᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴊᴇᴄᴛ", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("na_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("sᴏʀʀʏ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ɴᴏᴛ ᴀᴠᴀɪʟᴀʙʟᴇ", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("ul_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴜᴘʟᴏᴀᴅᴇᴅ", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("aa_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ᴀʟʀᴇᴀᴅʏ ᴀᴠᴀɪʟᴀʙʟᴇ", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("upload_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("ʏᴏᴜʀ ʀᴇǫᴜᴇꜱᴛ ᴡɪʟʟ ʙᴇ ᴜᴘʟᴏᴀᴅᴇᴅ ᴡɪᴛʜɪɴ 1 ʜᴏᴜʀ 😁", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+    elif query.data.startswith("yrs_alert"):
+        ident, user_id = query.data.split("#")
+        userid = query.from_user.id
+        if str(userid) in user_id:
+            await query.answer("ʙʀᴏ ᴘʟᴇᴀꜱᴇ ᴛᴇʟʟ ᴍᴇ ʏᴇᴀʀꜱ, ᴛʜᴇɴ ɪ ᴡɪʟʟ ᴜᴘʟᴏᴀᴅ 😬", show_alert=True)
+        else:
+            await query.answer(script.ALRT_TXT, show_alert=True)
+
+
+
+    elif query.data.startswith("batchfiles"):
+        clicked = query.from_user.id
+        ident, key = query.data.split("#")
+        try:
+            await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=all_{key}")
+        except UserIsBlocked:
+            await query.answer('Uɴʙʟᴏᴄᴋ ᴛʜᴇ ʙᴏᴛ ᴍᴀʜɴ !', show_alert=True)
+        except Exception as e:
+            logger.exception(e)
+            await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=all_{key}")
+
+    
+    elif query.data == "translatemm":
+        btn = [        
+            [InlineKeyboardButton("Translate English", callback_data="translateen")],    
+            [InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KOPAINGLAY15")],
+            [InlineKeyboardButton("⚠️ ᴄʟᴏsᴇ / ᴅᴇʟᴇᴛᴇ ⚠️", callback_data="close_data")]
+        ]
+        reply_markup = InlineKeyboardMarkup(btn)
+        await client.edit_message_media(
+            query.message.chat.id, 
+            query.message.id, 
+            InputMediaPhoto(Config.PAYMENT_QR)
+        )
+        await query.message.edit_text(
+            text=Config.PAYMENT_TEXTMM,
+            reply_markup=reply_markup
+        )
+
+    elif query.data == "translateen":
+        btn = [        
+            [InlineKeyboardButton("Translate Myanmar", callback_data="translatemm")],    
+            [InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KOPAINGLAY15")],
+            [InlineKeyboardButton("⚠️ ᴄʟᴏsᴇ / ᴅᴇʟᴇᴛᴇ ⚠️", callback_data="close_data")]
+        ]
+        reply_markup = InlineKeyboardMarkup(btn)
+        await client.edit_message_media(
+            query.message.chat.id, 
+            query.message.id, 
+            InputMediaPhoto(Config.PAYMENT_QR)
+        )
+        await query.message.edit_text(
+            text=Config.PAYMENT_TEXT,
+            reply_markup=reply_markup
+        )
+
+    elif query.data.startswith("delfile"):
+        ident, file_id = query.data.split("#")
+        await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=files_{file_id}")
