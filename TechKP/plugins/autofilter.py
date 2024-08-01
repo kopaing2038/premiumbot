@@ -237,7 +237,7 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False , pm_mode = F
             if not settings["IS_BUTTON"]:
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
             
     else:
         if settings["IS_BUTTON"]:
@@ -247,7 +247,7 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False , pm_mode = F
             if not settings.get("DOWNLOAD_BUTTON"):
                 cap+="<b>\n\n○ <u>**🍿 Your Movie Files 👇**</u></b>\n"
                 for file in files:
-                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
+                    cap += f"""<b>\n○ <a href="https://telegram.me/{bot.me.username}?start=files_{file['file_id']}">{file['file_name']} [{get_size(file['file_size'])}]\n</a></b>"""
 
     if imdb and imdb.get("poster") and settings["IMDB_POSTER"]:  # type: ignore
         try:
