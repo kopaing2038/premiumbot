@@ -16,6 +16,7 @@ from TechKP.utils.botTools import get_size, get_status, get_seconds, get_mmks, h
 import pymongo
 from motor.motor_asyncio import AsyncIOMotorClient
 import logging
+from pyrogram.errors import PeerIdInvalid
 
 logging.basicConfig(level=logging.INFO)
 
