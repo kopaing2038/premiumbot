@@ -204,19 +204,6 @@ async def start_handler(bot: Client, msg: types.Message):
                         pass
             await sts.delete()
             return
-        elif cmd.startswith("fsub"):
-            invite_link = await bot.create_chat_invite_link(Config.FORCE_SUB_CHANNEL)
-            btn = [
-                [
-                    types.InlineKeyboardButton(
-                        "Join Channel", url=invite_link.invite_link
-                    )
-                ],
-            ]
-
-            await msg.reply(FORCE_TEXT, reply_markup=types.InlineKeyboardMarkup(btn))
-
-            return
 
     if len(msg.command) != 2:
         buttons = [[
