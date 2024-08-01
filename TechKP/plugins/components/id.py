@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
 
-@Client.on_message(filters.private & filters.text) 
-async def evpm_text(bot, message):
+@Client.on_message(filters.private & filters.text & filters.incoming)
+async def evpm_tedvxt(bot, message):
     content = message.text
     user = message.from_user.first_name
     user_id = message.from_user.id
