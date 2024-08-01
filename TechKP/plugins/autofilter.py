@@ -24,7 +24,7 @@ im_db = Cinemagoer()
 log = LOGGER(__name__)
 
 
-@Client.on_message(filters.group & filters.text & filters.incoming, group=-1)  # type: ignore
+@Client.on_message(filters.group & filters.text & filters.incoming)  # type: ignore
 async def group_search(client, message):
     user_id = message.from_user.id if message.from_user else None
     chat_id = message.chat.id
