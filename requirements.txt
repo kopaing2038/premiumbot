@@ -5,3 +5,4 @@ cinemagoer
 dnspython
 imdbpie
 python-dotenv
+fuzzywuzzy
