@@ -126,7 +126,7 @@ class BaseFilterDb:
         return files, next_offset, total_results
 
     async def get_file_details(self, file_id: str):
-        return await self.col.find_one({"_id": file_id})  # type: ignore
+        return await self.col.find_one({"file_id": file_id})  # type: ignore
 
     async def get_bad_files(self, query: str, file_type: str = None, offset: int = 0, filter: bool = False):
         query = query.strip()
