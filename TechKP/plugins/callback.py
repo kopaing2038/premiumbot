@@ -23,7 +23,7 @@ from ..utils.botTools import (
     handle_next_back
 )
 from imdb import Cinemagoer 
-from ..database import a_filter, b_filter, db1, db2
+from ..database import a_filter, b_filter, db1, db2, usersDB
 import re, time, datetime
 from ..utils.botTools import get_readable_time
 from TechKP.plugins.index import index_files_to_db, series_index_files_to_db, lock
