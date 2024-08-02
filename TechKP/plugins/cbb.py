@@ -1,7 +1,8 @@
 import logging, asyncio, time, pytz, re, os, math, random
 import json
 import pyrogram
-from pyrogram import errors, filters, types, Client, enums, handler
+from pyrogram import handlers, types
+from pyrogram import errors, filters, types, Client, enums
 from ..database import configDB as config_db
 from ..utils.botTools import CONFIGURABLE, get_bool, get_buttons
 from TechKP.config.Script import script
