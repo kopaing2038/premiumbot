@@ -117,7 +117,7 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
                         await asyncio.sleep(2)
                         msg.text = is_misspelled
                         await ai_sts.delete()                        
-                        return await auto_filter(bot, msg)
+                        return await auto_filter(bot, message, msg)
                     await ai_sts.delete()
                     
                     return await advantage_spell_chok(msg)
