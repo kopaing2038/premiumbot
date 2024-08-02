@@ -101,7 +101,7 @@ async def premium_users_dbnext_page(client, query):
 
 
 
-@Client.on_callback_query()
+#@Client.on_callback_query()
 async def csdb_handler(client: Client, query: CallbackQuery):
     if query.data == "close_data":
         try:
@@ -598,3 +598,8 @@ async def csdb_handler(client: Client, query: CallbackQuery):
     elif query.data.startswith("delfile"):
         ident, file_id = query.data.split("#")
         await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=files_{file_id}")
+
+
+
+Client.add_handler(csdb_handler)
+
