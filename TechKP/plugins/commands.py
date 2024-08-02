@@ -214,7 +214,7 @@ async def start_handler(bot: Client, msg: types.Message):
                         pass
             await sts.delete()
             return
-    if len(message.command) == 2 and message.command[1] == 'premium':
+    if len(msg.command) == 2 and msg.command[1] == 'premium':
         if not await db.has_premium_access(msg.from_user.id):
             btn = [       
                 [types.InlineKeyboardButton("Translate Myanmar", callback_data="translatemm")],        
