@@ -24,7 +24,7 @@ im_db = Cinemagoer()
 log = LOGGER(__name__)
 
 
-@Client.on_message(filters.group & filters.text & filters.incoming) 
+@Client.on_message(filters.group & filters.text & filters.incoming, group=-1) 
 async def give_filter(client, message):
     user_id = message.from_user.id if message.from_user else None
     chat_id = message.chat.id
@@ -94,7 +94,7 @@ async def give_filter(client, message):
 
 
 
-async def auto_filter(bot: Client, msg: types.Message, spoll=False , pm_mode = False):
+async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = False):
     curr_time = datetime.now(pytz.timezone('Asia/Yangon')).time()
 
     if not spoll:
@@ -338,12 +338,12 @@ async def next_page(bot: Client, query: types.CallbackQuery):
     Cache.GETALL[key] = files
     batch_link = f"batchfiles#{key}"
 
-    if 0 < offset <= 10:
+    if 0 < offset <= 8:
         off_set = 0
     elif offset == 0:
         off_set = None
     else:
-        off_set = offset - 10
+        off_set = offset - 8
     if n_offset == 0:
         btn.append(
             [
@@ -351,7 +351,7 @@ async def next_page(bot: Client, query: types.CallbackQuery):
                     "⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"
                 ),
                 types.InlineKeyboardButton(
-                    f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                    f"📃 Pages {math.ceil(int(offset) / 8) + 1} / {math.ceil(total / 8)}",
                     callback_data="pages",
                 ),
             ]
@@ -360,7 +360,7 @@ async def next_page(bot: Client, query: types.CallbackQuery):
         btn.append(
             [
                 types.InlineKeyboardButton(
-                    f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                    f"🗓 {math.ceil(int(offset) / 8) + 1} / {math.ceil(total / 8)}",
                     callback_data="pages",
                 ),
                 types.InlineKeyboardButton(
@@ -375,7 +375,7 @@ async def next_page(bot: Client, query: types.CallbackQuery):
                     "⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"
                 ),
                 types.InlineKeyboardButton(
-                    f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                    f"🗓 {math.ceil(int(offset) / 8) + 1} / {math.ceil(total / 8)}",
                     callback_data="pages",
                 ),
                 types.InlineKeyboardButton(
