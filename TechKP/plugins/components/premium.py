@@ -17,6 +17,9 @@ import pymongo
 from motor.motor_asyncio import AsyncIOMotorClient
 import logging
 from pyrogram.errors import PeerIdInvalid
+import logging
+import math
+from pyrogram.errors import PeerIdInvalid, ChannelInvalid, BadRequest
 
 logging.basicConfig(level=logging.INFO)
 
@@ -319,6 +322,8 @@ async def premium_users_dbnext_page(client, query):
             text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
 
+
+
 @Client.on_message(filters.private & filters.command('free_users') & filters.user(Config.ADMINS))
 async def free_list_users(client, message):
     users, offset, total, max_btn = await handle_next_back(await db.get_all_users(), max_results=30)
@@ -338,8 +343,8 @@ async def free_list_users(client, message):
         try:
             user_info = await client.get_users([user['id']])
             text += f"{user_num}. <a href='tg://user?id={user['id']}'>{user_info[0].mention}</a> [<code>{user['id']}</code>]\n\n"
-        except PeerIdInvalid:
-            logging.warning(f"Invalid user ID: {user['id']}")
+        except (PeerIdInvalid, ChannelInvalid, BadRequest) as e:
+            logging.warning(f"Invalid user ID: {user['id']} - Error: {str(e)}")
             text += f"{user_num}. <code>{user['id']}</code> (Invalid ID)\n\n"
     await message.reply(text, reply_markup=InlineKeyboardMarkup(btn))
 
@@ -372,7 +377,8 @@ async def free_users_next_page(client, query):
         try:
             user_info = await client.get_users([user['id']])
             text += f"{user_num}. <a href='tg://user?id={user['id']}'>{user_info[0].mention}</a> [<code>{user['id']}</code>]\n\n"
-        except PeerIdInvalid:
-            logging.warning(f"Invalid user ID: {user['id']}")
+        except (PeerIdInvalid, ChannelInvalid, BadRequest) as e:
+            logging.warning(f"Invalid user ID: {user['id']} - Error: {str(e)}")
             text += f"{user_num}. <code>{user['id']}</code> (Invalid ID)\n\n"
     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
+
