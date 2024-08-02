@@ -360,7 +360,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         used_disk = get_size(disk_usage('/').used)
         total_ram = get_size(virtual_memory().total)
         used_ram = get_size(virtual_memory().used)
-        os_uptime = get_time(times.time() - boot_time())
+        os_uptime = get_time(time.time() - boot_time())
         await query.message.edit_text(
             text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, round(used_dbSize, 2), round(free_dbSize, 2), totalsec, round(used_dbSize2, 2), round(free_dbSize2, 2), cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
             reply_markup=reply_markup,
@@ -393,7 +393,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         used_disk = get_size(disk_usage('/').used)
         total_ram = get_size(virtual_memory().total)
         used_ram = get_size(virtual_memory().used)
-        os_uptime = get_time(times.time() - boot_time())
+        os_uptime = get_time(time.time() - boot_time())
         await query.message.edit_text(
             text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, round(used_dbSize, 2), round(free_dbSize, 2), totalsec, round(used_dbSize2, 2), round(free_dbSize2, 2), cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
             reply_markup=reply_markup,
