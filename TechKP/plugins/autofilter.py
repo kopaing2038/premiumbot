@@ -8,7 +8,7 @@ from fuzzywuzzy import process
 from ..config import Config
 from ..database import a_filter, b_filter
 from ..database import configDB as config_db
-from ..utils.botTools import check_fsub, format_buttons, get_size, parse_link, get_cap, get_cap2, get_status
+from ..utils.botTools import check_fsub, format_buttons, get_size, parse_link, get_cap, get_cap2, get_status, is_check_admin
 from ..utils.cache import Cache
 from ..utils.imdbHelpers import get_poster
 from ..utils.logger import LOGGER
