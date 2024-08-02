@@ -36,7 +36,7 @@ async def start():
     Cache.U_NAME = me.username
     Cache.B_NAME = me.first_name
     Cache.B_LINK = me.mention
-
+    Cache.BOT_START_TIME = time.time()
     tz = pytz.timezone('Asia/Yangon')
     today = date.today()
     now = datetime.now(tz)
