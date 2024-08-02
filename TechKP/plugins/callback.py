@@ -44,12 +44,13 @@ async def setup_settings(bot: Client, query: types.CallbackQuery):
     settings[key] = get_bool(settings.get(key, True))  # type: ignore
     # setattr(Config, key, settings[key])
 
-
     await config_db.update_config(data_key, settings)
     await query.answer()
     try:
         await query.edit_message_reply_markup(types.InlineKeyboardMarkup(get_buttons(settings)))  # type: ignore
     except errors.MessageNotModified:
+        pass  # You might want to handle this exception if needed
+
 
 @Client.on_callback_query()
 async def csdb_handler(client: Client, query: CallbackQuery):
@@ -68,7 +69,6 @@ async def csdb_handler(client: Client, query: CallbackQuery):
             pass
     elif query.data == "buttons":
         await query.answer("ɴᴏ ᴍᴏʀᴇ ᴘᴀɢᴇs 😊", show_alert=True)
-
     elif query.data == "pages":
         await query.answer("ᴛʜɪs ɪs ᴘᴀɢᴇs ʙᴜᴛᴛᴏɴ 😅")
 
