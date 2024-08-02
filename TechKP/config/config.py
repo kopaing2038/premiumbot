@@ -115,6 +115,7 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
     IS_SENDALL = True
     IS_LANGUAGES = True
     IS_ADS = True
+    PM_SEARCH = True
 
     AUTO_APPROVE_MODE = bool(environ.get('AUTO_APPROVE_MODE', True)) # Set True or False
     USE_CAPTION_FILTER = get_config("USE_CAPTION_FILTER", True, True)  # type: ignore
