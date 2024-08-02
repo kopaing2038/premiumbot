@@ -344,7 +344,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         #secondary db
         totalsec = await b_filter.col.count_documents({})
         users = await usersDB.total_users_count()
-        chats = await await db.total_chat_count()
+        chats = await db.total_chat_count()
         premium_users = await db.premium_users_count()
         #primary db
         stats = await db1.command('dbStats')
@@ -377,7 +377,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         #secondary db
         totalsec = await b_filter.col.count_documents({})
         users = await usersDB.total_users_count()
-        chats = await await db.total_chat_count()
+        chats = await db.total_chat_count()
         premium_users = await db.premium_users_count()
         #primary db
         stats = await db1.command('dbStats')
