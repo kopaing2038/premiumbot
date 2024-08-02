@@ -12,7 +12,7 @@ import time
 @Client.on_chat_member_updated(filters.group)
 async def welcome(bot, message):
     if message.new_chat_member and not message.old_chat_member:
-        welcome_msg = Config.WELCOME.format(
+        welcome_msg = script.WELCOME_TEXT.format(
             mention = message.new_chat_member.user.mention,
             title = message.chat.title,
             user_id = message.chat.id
