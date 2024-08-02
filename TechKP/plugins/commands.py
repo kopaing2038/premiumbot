@@ -478,8 +478,8 @@ async def get_stats(_, msg: types.Message):
     totalp = await a_filter.col.count_documents({})
     totalsec = await b_filter.col.count_documents({})
     users = await usersDB.total_users_count()
-    chats = await db.get_all_chats({})
-    premium_users = await db.get_all_premium({})
+    chats = await db.get_all_chats()
+    premium_users = await db.get_all_premium()
         
     stats = await db1.command('dbStats')
     used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
