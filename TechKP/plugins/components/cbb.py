@@ -107,21 +107,21 @@ async def send_for_index(bot, message):
         await message.reply("Canceled this process.")
         return
 
-    if msg.text:
-        regex = re.compile(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
-        match = regex.match(msg.text)
+
+    if vj.text:
+        regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
+        match = regex.match(vj.text)
         if not match:
             return await vj.reply('Invalid link\n\nTry again by /index')
         chat_id = match.group(4)
         last_msg_id = int(match.group(5))
         if chat_id.isnumeric():
-            chat_id = int("-100" + chat_id)
-    elif msg.forward_from_chat and msg.forward_from_chat.type == enums.ChatType.CHANNEL:
-        last_msg_id = msg.forward_from_message_id
-        chat_id = msg.forward_from_chat.username or msg.forward_from_chat.id
+            chat_id  = int(("-100" + chat_id))
+    elif vj.forward_from_chat.type == enums.ChatType.CHANNEL:
+        last_msg_id = vj.forward_from_message_id
+        chat_id = vj.forward_from_chat.username or vj.forward_from_chat.id
     else:
         return
-
     try:
         await bot.get_chat(chat_id)
     except ChannelInvalid:
@@ -130,16 +130,13 @@ async def send_for_index(bot, message):
         return await vj.reply('Invalid Link specified.')
     except Exception as e:
         logger.exception(e)
-        return await vj.reply(f'Error: {e}')
-
+        return await vj.reply(f'Errors - {e}')
     try:
         k = await bot.get_messages(chat_id, last_msg_id)
-    except Exception as e:
-        logger.exception(e)
-        return await message.reply('Make sure that I am an admin in the channel if it is private.')
-
-    if not k:
-        return await message.reply('This may be a group and I am not an admin of the group.')
+    except:
+        return await message.reply('Make Sure That Iam An Admin In The Channel, if channel is private')
+    if k.empty:
+        return await message.reply('This may be group and iam not a admin of the group.')
 
     if message.from_user.id in Config.ADMINS:
         buttons = [
