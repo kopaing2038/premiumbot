@@ -26,15 +26,77 @@ from imdb import Cinemagoer
 from ..database import a_filter, b_filter
 import re, time, datetime
 from ..utils.botTools import get_readable_time
+from ..index import index_files_to_db, series_index_files_to_db
 
 logger = LOGGER("INDEX")
 ia = Cinemagoer()
 
 
-from ..config import Config
-from pyrogram import enums, errors, filters, types, Client
-from ..database import configDB as config_db
-from ..utils.botTools import CONFIGURABLE, get_bool, get_buttons
+@Client.on_callback_query(filters.regex(r"^index"))  # type: ignore
+async def index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("index_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="index_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
+
+@Client.on_callback_query(filters.regex(r"^seriesindex"))  # type: ignore
+async def series_index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("seriesindex_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="seriesindex_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await series_index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
 
 
 @Client.on_message(filters.command("settings") & filters.user(Config.ADMINS))  # type: ignore
