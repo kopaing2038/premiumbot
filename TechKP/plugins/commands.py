@@ -497,8 +497,6 @@ async def get_stats(_, msg: types.Message):
         os_uptime = get_time(times.time() - boot_time())
         await msg.edit_text(
             text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
-            reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
         )
 
 
