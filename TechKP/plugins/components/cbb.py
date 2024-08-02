@@ -22,8 +22,8 @@ from imdb import Cinemagoer
 
 ia = Cinemagoer()
 
-#@Client.on_callback_query()
-async def cbb_handler(client: Client, query: types.CallbackQuery):
+@Client.on_callback_query()
+async def cbbergwrg_hanqrgqgdler(client: Client, query):
     if query.data == "close_data":
         try:
             user = query.message.reply_to_message.from_user.id
