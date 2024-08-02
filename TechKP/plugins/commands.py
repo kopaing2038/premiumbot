@@ -216,19 +216,18 @@ async def start_handler(bot: Client, msg: types.Message):
             await sts.delete()
             return
     if len(msg.command) == 2 and msg.command[1] == 'premium':
-        if not await db.has_premium_access(msg.from_user.id):
-            btn = [       
-                [types.InlineKeyboardButton("Translate Myanmar", callback_data="translatemm")],        
-                [types.InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KOPAINGLAY15")],
-                [types.InlineKeyboardButton("⚠️ ᴄʟᴏsᴇ / ᴅᴇʟᴇᴛᴇ ⚠️", callback_data="close_data")]
-            ]
-            reply_markup = types.InlineKeyboardMarkup(btn)
-            await msg.reply_photo(
-                photo=Config.PAYMENT_QR,
-                caption=Config.PAYMENT_TEXT,
-                reply_markup=reply_markup
-            )
-            return
+        btn = [       
+            [types.InlineKeyboardButton("Translate Myanmar", callback_data="translatemm")],        
+            [types.InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KOPAINGLAY15")],
+            [types.InlineKeyboardButton("⚠️ ᴄʟᴏsᴇ / ᴅᴇʟᴇᴛᴇ ⚠️", callback_data="close_data")]
+        ]
+        reply_markup = types.InlineKeyboardMarkup(btn)
+        await msg.reply_photo(
+            photo=Config.PAYMENT_QR,
+            caption=Config.PAYMENT_TEXT,
+            reply_markup=reply_markup
+        )
+        return
     if len(msg.command) != 2:
         buttons = [[
             types.InlineKeyboardButton('🔖 Join Our Group to Use Me', url="https://t.me/MKS_RequestGroup")
