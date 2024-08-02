@@ -1,13 +1,21 @@
 import re
 
 from pymongo.errors import BulkWriteError, DuplicateKeyError
-
+from motor.motor_asyncio import AsyncIOMotorClient
 from ..config import Config
 from ..utils.botTools import unpack_new_file_id, parse_link
 from ..utils.logger import LOGGER
 from .mongoDb import MongoDb, SeriesMongoDb
 
 logger = LOGGER("AUTO_FILTER_DB")
+
+client = AsyncIOMotorClient(Config.DATABASE_URI)
+db1 = client[Config.SESSION_NAME]
+
+
+client2 = AsyncIOMotorClient(Config.SERIES_URI)
+db2 = client2[Config.SESSION_NAME]
+
 
 
 class BaseFilterDb:
