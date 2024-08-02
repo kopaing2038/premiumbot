@@ -93,6 +93,14 @@ async def give_filter(client, message):
             pass
 
 
+@Client.on_message(filters.private & filters.text & filters.incoming)
+async def evpm_tedvxt(bot, message):
+    content = message.text
+    user = message.from_user.first_name
+    user_id = message.from_user.id
+    if content.startswith("/") or content.startswith("#"): return  # ignore commands and hashtags
+    await bot.send_message(chat_id=Config.LOG_CHANNEL, text=f"<b>#𝐏𝐌_𝐌𝐒𝐆\n\nBOT = @{bot.me.username}\n\nNᴀᴍᴇ : {user}\n\nID : {user_id}\n\nMᴇssᴀɢᴇ : {content}</b>")
+    await auto_filter(bot, message)
 
 async def auto_filter(bot: Client, msg: types.Message, spoll=False , pm_mode = False):
     curr_time = datetime.now(pytz.timezone('Asia/Yangon')).time()
