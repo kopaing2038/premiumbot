@@ -519,9 +519,6 @@ async def get_stats(_, msg: types.Message):
         
     await msgs.edit_text(text=formatted_text)
     
-    except Exception as e:
-        await msgs.edit_text(f"An error occurred: {str(e)}")
-        print(f"Error: {str(e)}")
 
 
 @Client.on_message(filters.command("delete") & filters.user(Config.ADMINS))  # type: ignore
