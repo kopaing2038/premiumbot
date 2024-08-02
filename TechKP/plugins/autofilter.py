@@ -166,7 +166,7 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
             btn.append(
                 [
                     types.InlineKeyboardButton(
-                        text=f"🗓 1/{math.ceil(int(total_results) / 10)}",
+                        text=f"🗓 1/{math.ceil(int(total_results) / 8)}",
                         callback_data="pages",
                     ),
                     types.InlineKeyboardButton(
