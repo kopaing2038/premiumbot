@@ -27,6 +27,9 @@ from ..database import a_filter, b_filter
 import re, time, datetime
 from ..utils.botTools import get_readable_time
 from TechKP.plugins.index import index_files_to_db, series_index_files_to_db, lock
+from shortzy import Shortzy
+from psutil import virtual_memory, disk_usage, cpu_percent, boot_time
+
 
 logger = LOGGER("INDEX")
 ia = Cinemagoer()
@@ -328,7 +331,72 @@ async def cb_handler(client: Client, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup([
         [InlineKeyboardButton('⋞ ʙᴀᴄᴋ', callback_data='plans')]
         ]))
+    elif query.data == "stats":
+        await query.answer("Fetching MongoDb DataBase")
+        buttons = [[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data="start"),
+            InlineKeyboardButton('⟲ Rᴇғʀᴇsʜ', callback_data='rfrsh')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        totalp = await a_filter.col.count_documents({})
+        #secondary db
+        totalsec = await b_filter.col.count_documents({})
+        users = await db.get_uall_user()
+        chats = await db.get_all_chats()
+	premium_users = await db.get_all_premium()
+        #primary db
+        primary_u_size = (await a_filter.db.command("dbstats"))["dataSize"]
+        primary_f_size = 536870912 - primary_u_size
 
+        #secondary db
+        secondary_u_size = (await b_filter.db.command("dbstats"))["dataSize"]
+        secondary_f_size = 536870912 - secondary_u_size
+
+        cpu = cpu_percent()
+        bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
+        total_disk = get_size(disk_usage('/').total)
+        used_disk = get_size(disk_usage('/').used)
+        total_ram = get_size(virtual_memory().total)
+        used_ram = get_size(virtual_memory().used)
+        os_uptime = get_time(times.time() - boot_time())
+        await query.message.edit_text(
+            text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
+    elif query.data == "rfrsh":
+        await query.answer("Fetching MongoDb DataBase")
+        buttons = [[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data="start"),
+            InlineKeyboardButton('⟲ Rᴇғʀᴇsʜ', callback_data='rfrsh')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        totalp = await a_filter.col.count_documents({})
+        #secondary db
+        totalsec = await b_filter.col.count_documents({})
+        users = await db.get_uall_user()
+        chats = await db.get_all_chats()
+	premium_users = await db.get_all_premium()
+        #primary db
+        primary_u_size = (await a_filter.db.command("dbstats"))["dataSize"]
+        primary_f_size = 536870912 - primary_u_size
+
+        #secondary db
+        secondary_u_size = (await b_filter.db.command("dbstats"))["dataSize"]
+        secondary_f_size = 536870912 - secondary_u_size
+
+        cpu = cpu_percent()
+        bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
+        total_disk = get_size(disk_usage('/').total)
+        used_disk = get_size(disk_usage('/').used)
+        total_ram = get_size(virtual_memory().total)
+        used_ram = get_size(virtual_memory().used)
+        os_uptime = get_time(times.time() - boot_time())
+        await query.message.edit_text(
+            text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
     elif query.data == "features":
         buttons = [[
             InlineKeyboardButton('📸 ᴛ-ɢʀᴀᴘʜ', callback_data='telegraph'),
