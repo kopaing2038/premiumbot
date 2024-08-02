@@ -1023,11 +1023,13 @@ async def series_cb_handler(bot: Client, query: types.CallbackQuery):
         if result['kind'] == 'tv series':
             series_list.append(result['title'])
     original_offset = 0
+    cap = Cache.IMDB_CAP.get(query.from_user.id)
     if series_list:
-        cap = f"Found 10 series:\n"
+        cap += f"\n\nFound {len(series_list)} series:\n"
         btn = []
         for series in series_list:                                    
             btn.append([types.InlineKeyboardButton(series, callback_data=f"seri#{series[:10]}#{key}#{0}#{offset}#{req}")])
+            btn.append([types.InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ ᴍᴀɪɴ ᴘᴀɢᴇ", callback_data=f"next_{req}_{key}_{0}")])
         await query.message.edit_text(text=cap, reply_markup=types.InlineKeyboardMarkup(btn))
     else:
         await query.message.edit_text("No series found.")
@@ -1901,22 +1903,34 @@ async def advantage_spoll_choker(bot, query):
         except:
             pass
 
+
+
 async def ai_spell_check(wrong_name):
     async def search_movie(wrong_name):
         search_results = im_db.search_movie(wrong_name)
         movie_list = [movie['title'] for movie in search_results]
         return movie_list
+    
+    # Clean the query
+    query = re.sub(
+        r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|br((o|u)h?)*|^h(e|a)?(l)*(o)*|mal(ayalam)?|t(h)?amil|file|that|find|und(o)*|kit(t(i|y)?)?o(w)?|thar(u)?(o)*w?|kittum(o)*|aya(k)*(um(o)*)?|full\smovie|any(one)|with\ssubtitle(s)?)",
+        "", wrong_name, flags=re.IGNORECASE
+    ).strip() + " movie"
+    
     movie_list = await search_movie(wrong_name)
     if not movie_list:
         return
+    
     for _ in range(5):
         closest_match = process.extractOne(wrong_name, movie_list)
         if not closest_match or closest_match[1] <= 80:
-            return 
+            return
+        
         movie = closest_match[0]
         files, offset, total_results = await a_filter.get_search_results(movie)
         if files:
             return movie
+        
         movie_list.remove(movie)
 
 
