@@ -99,16 +99,6 @@ async def series_index_files(bot: Client, query: types.CallbackQuery):
     await series_index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
 
 
-@Client.on_message(filters.command("settings") & filters.user(Config.ADMINS))  # type: ignore
-async def handle_settings(bot: Client, msg: types.Message):
-    if msg.chat.type == enums.ChatType.PRIVATE:
-        settings = await config_db.get_settings(f"SETTINGS_PM")
-    else:
-        settings = await config_db.get_settings(f"SETTINGS_{msg.chat.id}")
-
-    await msg.reply(
-        "Configure your bot here", reply_markup=types.InlineKeyboardMarkup(get_buttons(settings))  # type: ignore
-    )
 
 @Client.on_callback_query(filters.regex("^settings"))  # type: ignore
 async def setup_settings(bot, query: types.CallbackQuery):
