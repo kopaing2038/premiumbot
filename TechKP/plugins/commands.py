@@ -478,7 +478,7 @@ async def get_stats(_, msg: types.Message):
     totalp = await a_filter.col.count_documents({})
     totalsec = await b_filter.col.count_documents({})
     users = await usersDB.total_users_count()
-    chats = await await db.total_chat_count()
+    chats = await db.total_chat_count()
     premium_users = await db.premium_users_count()
         
     stats = await db1.command('dbStats')
