@@ -1,5 +1,5 @@
 
-import logging, asyncio, time, pytz, re, os, math, json, random, base64
+import logging, asyncio, time, pytz, re, os, math, json, random, base64, sys
 from pyrogram import errors, filters, types, Client, enums
 from TechKP.config.Script import script
 from ..config import Config
