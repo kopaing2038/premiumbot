@@ -5,7 +5,7 @@ from ..database import configDB as config_db
 from ..utils.botTools import CONFIGURABLE, get_bool, get_buttons
 
 
-@Client.on_message(filters.command("gsettings") & filters.user(Config.ADMINS))  # type: ignore
+@Client.on_message(filters.command("settings") & filters.user(Config.ADMINS))  # type: ignore
 async def handle_settings(bot: Client, msg: types.Message):
     if msg.chat.type == enums.ChatType.PRIVATE:
         settings = await config_db.get_settings(f"SETTINGS_PM")
