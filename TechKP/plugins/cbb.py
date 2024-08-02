@@ -3,12 +3,12 @@ import json
 import pyrogram
 from pyrogram import errors, filters, types, Client, enums
 from TechKP.config.Script import script
-from ...utils.cache import Cache
-from ...utils.logger import LOGGER
-from ...config import Config
+from ..utils.cache import Cache
+from ..utils.logger import LOGGER
+from ..config import Config
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
-from ...utils.botTools import (
+from ..utils.botTools import (
     check_fsub,
     format_buttons,
     get_size,
