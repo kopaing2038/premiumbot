@@ -276,7 +276,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.edit_message_media(
             media=types.InputMediaPhoto(
                 media=random.choice(Config.START_IMG),
-                caption=script.START_TXT.format(query.from_user.mention, get_status(), query.from_user.id)
+                caption=script.START_TXT.format(query.from_user.mention if query.from_user else query.chat.title, Cache.U_NAME, Cache.B_NAME, get_status())
             ),
             reply_markup=reply_markup
         )
