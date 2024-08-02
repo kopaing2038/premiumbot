@@ -268,7 +268,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
             types.InlineKeyboardButton('〄 Hᴇʟᴘ', callback_data='help'),
             types.InlineKeyboardButton('🫠 ᴀʙᴏᴜᴛ 🚩', callback_data='about')
         ],[
-            types.InlineKeyboardButton('🤞🏻 ʙᴏᴛ ᴏᴡɴᴇʀ 🤡', callback_data='admin')
+            types.InlineKeyboardButton('⌬  Sᴛᴀᴛs  ⌬', callback_data='stats'),
+            types.InlineKeyboardButton('🤞🏻  Dᴇᴠᴇʟᴏᴘᴇʀs  🤡', callback_data='admin')
         ]]
         reply_markup = types.InlineKeyboardMarkup(buttons)            
         await query.edit_message_media(
