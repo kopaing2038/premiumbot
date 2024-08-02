@@ -3,7 +3,7 @@ import logging, asyncio, time, pytz, re, os, math, json, random, base64
 from pyrogram import errors, filters, types, Client, enums
 from TechKP.config.Script import script
 from ..config import Config
-from ..database import a_filter, b_filter, usersDB
+from ..database import a_filter, b_filter, db1, db2, usersDB
 from ..utils.botTools import (
     check_fsub,
     format_buttons,
@@ -473,7 +473,7 @@ async def help_handler(bot: Client, msg: types.Message):
 
 @Client.on_message(filters.command("stats"))  # type: ignore
 async def get_stats(_, msg: types.Message):
-        await msg.reply("Fetching MongoDb DataBase")
+        msgs = await msg.answer("Fetching MongoDb DataBase")
         totalp = await a_filter.col.count_documents({})
         #secondary db
         totalsec = await b_filter.col.count_documents({})
@@ -481,13 +481,13 @@ async def get_stats(_, msg: types.Message):
         chats = await db.get_all_chats()
         premium_users = await db.get_all_premium()
         #primary db
-        primary_u_size = (await a_filter.db.command("dbstats"))["dataSize"]
-        primary_f_size = 536870912 - primary_u_size
-
+        stats = await db1.command('dbStats')
+        used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
+        free_dbSize = 512-used_dbSize
         #secondary db
-        secondary_u_size = (await b_filter.db.command("dbstats"))["dataSize"]
-        secondary_f_size = 536870912 - secondary_u_size
-
+        stats2 = await db2.command('dbStats')
+        used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
+        free_dbSize2 = 512-used_dbSize2
         cpu = cpu_percent()
         bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
         total_disk = get_size(disk_usage('/').total)
@@ -495,8 +495,8 @@ async def get_stats(_, msg: types.Message):
         total_ram = get_size(virtual_memory().total)
         used_ram = get_size(virtual_memory().used)
         os_uptime = get_time(times.time() - boot_time())
-        await msg.edit_text(
-            text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
+        await msgs.edit_text(
+            text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, round(used_dbSize, 2), round(free_dbSize, 2), totalsec, round(used_dbSize2, 2), round(free_dbSize2, 2), cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
         )
 
 
