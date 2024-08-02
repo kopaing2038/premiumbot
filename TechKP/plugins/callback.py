@@ -102,8 +102,12 @@ async def premium_users_dbnext_page(client, query):
 
 
 
-#@Client.on_callback_query()
-async def csdb_handler(client: Client, query: CallbackQuery):
+@Client.on_callback_query()
+async def cb_handler(client: Client, query: CallbackQuery):
+    try:
+        link = await client.create_chat_invite_link(int(Config.REQST_CHANNEL))
+    except:
+        pass
     if query.data == "close_data":
         try:
             user = query.message.reply_to_message.from_user.id
@@ -599,14 +603,6 @@ async def csdb_handler(client: Client, query: CallbackQuery):
     elif query.data.startswith("delfile"):
         ident, file_id = query.data.split("#")
         await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=files_{file_id}")
-
-
-from KPBOT.bot import TechKPBot
-callback_query_handler = CallbackQueryHandler(csdb_handler)
-
-
-TechKPBot.add_handler(callback_query_handler)
-
 
 
 
