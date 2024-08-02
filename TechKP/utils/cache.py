@@ -23,3 +23,4 @@ class Cache:
     BOT = None
     GETALL2 = {}
     GETALL = {}
+    BOT_START_TIME = 0
