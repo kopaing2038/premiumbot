@@ -3,6 +3,7 @@ from pyrogram import Client, filters
 from TechKP.database.db import db
 from TechKP.config.config import Config
 from TechKP.utils.botTools import broadcast_messages, broadcast_messages_group
+from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
 
 @Client.on_message(filters.command("premium_broadcast") & filters.user(Config.ADMINS))
 async def premium_pm_broadcast(bot, message):
