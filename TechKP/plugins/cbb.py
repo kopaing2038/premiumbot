@@ -601,10 +601,11 @@ async def csdb_handler(client: Client, query: CallbackQuery):
         await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=files_{file_id}")
 
 
+from KPBOT.bot import TechKPBot
 callback_query_handler = CallbackQueryHandler(csdb_handler)
 
 
-Cache.BOT.add_handler(callback_query_handler)
+TechKPBot.add_handler(callback_query_handler)
 
 
 
