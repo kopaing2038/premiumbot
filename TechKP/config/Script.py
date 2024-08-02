@@ -13,7 +13,7 @@ sᴇɴᴅ ᴍᴇ ᴀɴʏ ᴍᴏᴠɪᴇ ᴏʀ sᴇʀɪᴇs ɴᴀᴍᴇ ᴀɴᴅ 
 ᴍᴀɪɴᴛᴀɪɴᴇᴅ ʙʏ : @KOPAINGLAY15</a>
 </b>"""
 
-    WELCOME_TEXT = """👋 Hello {mention} , ID : <code>{user_id}</code>\n\n Welcome to {title} group! 💞"""
+    WELCOME_TEXT = """👋 Hello {mention} , \n\n Welcome to {title} group! 💞\n\nUser ID : <code>{user_id}</code>"""
 
 
     HELP_TXT = """<b>ᴄʟɪᴄᴋ ᴏɴ ᴛʜᴇ ʙᴜᴛᴛᴏɴꜱ ʙᴇʟᴏᴡ ᴛᴏ ɢᴇᴛ ᴅᴏᴄᴜᴍᴇɴᴛᴀᴛɪᴏɴ ᴀʙᴏᴜᴛ ꜱᴘᴇᴄɪꜰɪᴄ ᴍᴏᴅᴜʟᴇꜱ..</b>"""
