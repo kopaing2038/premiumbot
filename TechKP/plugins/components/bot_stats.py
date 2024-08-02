@@ -9,6 +9,16 @@ from datetime import datetime
 import psutil
 import time
 
+@Client.on_chat_member_updated(filters.group)
+async def welcome(bot, message):
+    if message.new_chat_member and not message.old_chat_member:
+        welcome_msg = Config.WELCOME.format(
+            mention = message.new_chat_member.user.mention,
+            title = message.chat.title,
+            user_id = message.chat.id
+        )
+        await bot.send_message(chat_id=message.chat.id, text=welcome_msg)
+
 @Client.on_message(filters.new_chat_members & filters.group)
 async def save_group(bot, message):
     check = [u.id for u in message.new_chat_members]
