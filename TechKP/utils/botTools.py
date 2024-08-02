@@ -354,6 +354,13 @@ def get_buttons(settings: dict):
                 ),
             ]
         )
+    BTN.append(
+        [
+            types.InlineKeyboardButton(
+                "Close", callback_data="close_data"
+            ),
+        ]
+    )
     return BTN
 
 
