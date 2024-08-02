@@ -17,7 +17,7 @@ async def handle_settings(bot: Client, msg: types.Message):
     )
 
 
-#@Client.on_callback_query(filters.regex("^settings"))  # type: ignore
+@Client.on_callback_query(filters.regex("^settings"))  # type: ignore
 async def setup_settings(bot: Client, query: types.CallbackQuery):
     if query.from_user.id not in Config.ADMINS:
         return await query.answer("This is not for you!")
@@ -34,10 +34,11 @@ async def setup_settings(bot: Client, query: types.CallbackQuery):
     settings[key] = get_bool(settings.get(key, True))  # type: ignore
     # setattr(Config, key, settings[key])
 
-
     await config_db.update_config(data_key, settings)
     await query.answer()
     try:
         await query.edit_message_reply_markup(types.InlineKeyboardMarkup(get_buttons(settings)))  # type: ignore
     except errors.MessageNotModified:
-        pass
+        pass  # You might want to handle this exception if needed
+
+
