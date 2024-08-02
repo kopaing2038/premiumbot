@@ -297,7 +297,7 @@ async def start_handler(bot: Client, msg: types.Message):
     if not files_:
         files_ = await b_filter.get_file_details(file_id) 
         if not files_:
-            pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("ascii")).split("_", 1)
+            pre, file_id = ((base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))).decode("utf-8")).split("_", 1)
             try:
                 if not await db.has_premium_access(msg.from_user.id):
                     btn = [       
