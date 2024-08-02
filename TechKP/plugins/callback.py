@@ -355,7 +355,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
         free_dbSize2 = 512-used_dbSize2
         cpu = cpu_percent()
-        bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
+        bot_uptime = get_time(times.time() - Cache.BOT_START_TIME)
         total_disk = get_size(disk_usage('/').total)
         used_disk = get_size(disk_usage('/').used)
         total_ram = get_size(virtual_memory().total)
@@ -388,7 +388,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
         free_dbSize2 = 512-used_dbSize2
         cpu = cpu_percent()
-        bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
+        bot_uptime = get_time(times.time() - Cache.BOT_START_TIME)
         total_disk = get_size(disk_usage('/').total)
         used_disk = get_size(disk_usage('/').used)
         total_ram = get_size(virtual_memory().total)
