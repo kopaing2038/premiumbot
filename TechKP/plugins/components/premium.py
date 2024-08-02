@@ -266,7 +266,7 @@ async def premium_list_users(client, message):
     if offset != 0:
         btn = [[
             InlineKeyboardButton(f"Page 1 / {math.ceil(total / max_btn)}", callback_data='bar'),
-            InlineKeyboardButton('Next', callback_data=f"premium_users_next#{offset}")
+            InlineKeyboardButton('Next', callback_data=f"premium_next#{offset}")
         ]]
     else:
         btn = [[
@@ -285,8 +285,8 @@ async def premium_list_users(client, message):
 
 
 
-@Client.on_callback_query(filters.regex(r"^premium_users_next"))
-async def premium_users_next_page(client, query):
+@Client.on_callback_query(filters.regex(r"^premium_next"))
+async def premium_users_dbnext_page(client, query):
     _, offset = query.data.split("#")
     offset = int(offset)
     users, n_offset, total, max_btn = await handle_next_back(await db.get_premium_users(), offset=offset, max_results=30)
@@ -294,19 +294,19 @@ async def premium_users_next_page(client, query):
 
     if n_offset == 0:
         btn = [[
-            InlineKeyboardButton("Back", callback_data=f"premium_users_next#{b_offset}"),
+            InlineKeyboardButton("Back", callback_data=f"premium_next#{b_offset}"),
             InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar")
         ]]
     elif offset == 0:
         btn = [[
             InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
-            InlineKeyboardButton("Next", callback_data=f"premium_users_next#{n_offset}")
+            InlineKeyboardButton("Next", callback_data=f"premium_next#{n_offset}")
         ]]
     else:
         btn = [[
-            InlineKeyboardButton("Back", callback_data=f"premium_users_next#{b_offset}"),
+            InlineKeyboardButton("Back", callback_data=f"premium_next#{b_offset}"),
             InlineKeyboardButton(f"{math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
-            InlineKeyboardButton("Next", callback_data=f"premium_users_next#{n_offset}")
+            InlineKeyboardButton("Next", callback_data=f"premium_next#{n_offset}")
         ]]
 
     text = ""
