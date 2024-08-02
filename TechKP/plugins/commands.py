@@ -111,6 +111,11 @@ async def start_handler(bot: Client, msg: types.Message):
                 btn.append(
                     [types.InlineKeyboardButton(text="🗓 1/1", callback_data="pages")]
                 )
+            btn.insert(0, 
+                [
+                    types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}")              
+               ]
+            )  
             cur_time = datetime.now(pytz.timezone('Asia/Yangon')).time()
             time_difference = timedelta(hours=cur_time.hour, minutes=cur_time.minute, seconds=(cur_time.second+(cur_time.microsecond/1000000))) - timedelta(hours=curr_time.hour, minutes=curr_time.minute, seconds=(curr_time.second+(curr_time.microsecond/1000000)))
             remaining_seconds = "{:.2f}".format(time_difference.total_seconds())
@@ -223,7 +228,8 @@ async def start_handler(bot: Client, msg: types.Message):
             types.InlineKeyboardButton('〄 Hᴇʟᴘ', callback_data='help'),
             types.InlineKeyboardButton('🫠 ᴀʙᴏᴜᴛ 🚩', callback_data='about')
         ],[
-            types.InlineKeyboardButton('🤞🏻  ʙᴏᴛ ᴏᴡɴᴇʀ 🤡', callback_data='admin')
+            types.InlineKeyboardButton('⌬  Sᴛᴀᴛs  ⌬', callback_data='stats'),
+            types.InlineKeyboardButton('🤞🏻  Dᴇᴠᴇʟᴏᴘᴇʀs  🤡', callback_data='admin')
         ]]
         reply_markup = types.InlineKeyboardMarkup(buttons)
         await msg.reply_photo(
