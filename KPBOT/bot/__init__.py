@@ -49,7 +49,7 @@ from pyrogram.handlers import CallbackQueryHandler, InlineQueryHandler, ChosenIn
 from TechKP.utils.logger import LOGGER
 
 async def resolve_listener(
-    client: PatchedClient,
+    client: TechKPBot,
     update: Union[types.CallbackQuery, types.Message, types.InlineQuery, types.ChosenInlineResult],
 ):
     if isinstance(update, types.CallbackQuery):
