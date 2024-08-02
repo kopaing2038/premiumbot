@@ -23,7 +23,7 @@ from imdb import Cinemagoer
 
 ia = Cinemagoer()
 
-@Client.on_callback_query()
+#@Client.on_callback_query()
 async def csdb_handler(client: Client, query: CallbackQuery):
     if query.data == "close_data":
         try:
