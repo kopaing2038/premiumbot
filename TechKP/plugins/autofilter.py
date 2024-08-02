@@ -105,19 +105,6 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
         if 2 < len(message.text) < 200:
             settings = await config_db.get_settings(f"SETTINGS_{message.chat.id}")
             search = message.text
-            find = search.split(" ")
-            search = ""
-            removes = ["in","upload", "series", "full", "horror", "thriller", "mystery", "print", "file"]
-            for x in find:
-                if x in removes:
-                    continue
-                else:
-                    search = search + x + " "
-            search = re.sub(r"\b(pl(i|e)*?(s|z+|ease|se|ese|(e+)s(e)?)|((send|snd|giv(e)?|gib)(\sme)?)|movie(s)?|new|latest|bro|bruh|broh|helo|that|find|dubbed|link|venum|iruka|pannunga|pannungga|anuppunga|anupunga|anuppungga|anupungga|film|undo|kitti|kitty|tharu|kittumo|kittum|movie|any(one)|with\ssubtitle(s)?)", "", search, flags=re.IGNORECASE)
-            search = re.sub(r"\s+", " ", search).strip()
-            search = search.replace("-", " ")
-            search = search.replace(":", "")
-            search = search.replace(".", "")
             files, offset, total_results = await a_filter.get_search_results(
                 search.lower(), offset=0, filter=True, photo=settings['PHOTO_FILTER']
             )
@@ -129,14 +116,12 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
                         await ai_sts.edit(f'<b>Ai Suggested <code>{is_misspelled}</code>\nSo Im Searching for <code>{is_misspelled}</code></b>')
                         await asyncio.sleep(2)
                         msg.text = is_misspelled
-                        await ai_sts.delete()
-                        await auto_filter(bot, msg)
-                        return 
+                        await ai_sts.delete()                        
+                        return await auto_filter(bot, msg)
                     await ai_sts.delete()
-                    await advantage_spell_chok(msg)
-                    return 
+                    
+                    return await advantage_spell_chok(msg)
                 return
-            return
 
     else:
         message = msg.message.reply_to_message  # msg will be callback query
