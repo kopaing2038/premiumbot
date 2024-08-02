@@ -32,10 +32,82 @@ ia = Cinemagoer()
 lock = asyncio.Lock()
 _REGEX = r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$"
 
+@Client.on_callback_query(filters.regex(r"^index"))  # type: ignore
+async def index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("index_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="index_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
+
+@Client.on_callback_query(filters.regex(r"^seriesindex"))  # type: ignore
+async def series_index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("seriesindex_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="seriesindex_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await series_index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
 
 @Client.on_message(filters.private & filters.command('index'))
 async def send_for_index(bot, message):
-    vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.**")
+    vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.\n\n/cancel - Cancel this process.**")
+    msg = await bot.listen(chat_id=message.chat.id)
+    if vj.text == '/cancel':
+        await vj.delete()
+        await message.reply("Canceled this process.")
+        return
+
+
     if vj.text:
         regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
         match = regex.match(vj.text)
