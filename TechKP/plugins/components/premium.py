@@ -336,11 +336,11 @@ async def free_list_users(client, message):
     text = ""
     for user_num, user in enumerate(users, start=1):
         try:
-            user_info = await client.get_users([user['_id']])
-            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info[0].mention}</a> [<code>{user['_id']}</code>]\n\n"
+            user_info = await client.get_users([user['id']])
+            text += f"{user_num}. <a href='tg://user?id={user['id']}'>{user_info[0].mention}</a> [<code>{user['id']}</code>]\n\n"
         except PeerIdInvalid:
-            logging.warning(f"Invalid user ID: {user['_id']}")
-            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
+            logging.warning(f"Invalid user ID: {user['id']}")
+            text += f"{user_num}. <code>{user['id']}</code> (Invalid ID)\n\n"
     await message.reply(text, reply_markup=InlineKeyboardMarkup(btn))
 
 @Client.on_callback_query(filters.regex(r"^free_users_next"))
@@ -370,9 +370,9 @@ async def free_users_next_page(client, query):
     text = ""
     for user_num, user in enumerate(users, start=offset+1):
         try:
-            user_info = await client.get_users([user['_id']])
-            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info[0].mention}</a> [<code>{user['_id']}</code>]\n\n"
+            user_info = await client.get_users([user['id']])
+            text += f"{user_num}. <a href='tg://user?id={user['id']}'>{user_info[0].mention}</a> [<code>{user['id']}</code>]\n\n"
         except PeerIdInvalid:
-            logging.warning(f"Invalid user ID: {user['_id']}")
-            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
+            logging.warning(f"Invalid user ID: {user['id']}")
+            text += f"{user_num}. <code>{user['id']}</code> (Invalid ID)\n\n"
     await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
