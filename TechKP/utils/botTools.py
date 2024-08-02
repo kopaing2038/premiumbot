@@ -258,6 +258,27 @@ def get_status():
         sts = "ɢᴏᴏᴅ ᴇᴠᴇɴɪɴɢ"
     return sts
 
+def get_time(seconds):
+    result = ''
+    days, remainder = divmod(seconds, 86400)
+    days = int(days)
+    if days != 0:
+        result += f'{days} Days '
+    hours, remainder = divmod(remainder, 3600)
+    hours = int(hours)
+    if hours != 0:
+        result += f'{hours} Hours '
+    minutes, seconds = divmod(remainder, 60)
+    minutes = int(minutes)
+    if minutes != 0:
+        result += f'{minutes} Minutes '
+    seconds = int(seconds)
+    if seconds != 0:
+        result += f'{seconds} Seconds '
+    if result == '':
+        result += '-'
+    return result.strip()
+
 
 def get_readable_time(seconds):
     periods = [('d', 86400), ('h', 3600), ('m', 60), ('s', 1)]
