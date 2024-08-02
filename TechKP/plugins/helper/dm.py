@@ -11,6 +11,6 @@ async def pm_text(bot, message):
     user_id = message.from_user.id
     if content.startswith("/") or content.startswith("#"): return  # ignore commands and hashtags
     if Config.PM_SEARCH == True:
-        await auto_filter(bot, message)
+        await auto_filter(bot, message, pm_mode=True)
     else:
         await bot.send_message(chat_id=Config.LOG_CHANNEL, text=f"<b>#𝐏𝐌_𝐌𝐒𝐆\n\nNᴀᴍᴇ : {user}\n\nID : {user_id}\n\nMᴇssᴀɢᴇ : {content}</b>")
