@@ -101,27 +101,30 @@ async def series_index_files(bot: Client, query: types.CallbackQuery):
 @Client.on_message(filters.private & filters.command('index'))
 async def send_for_index(bot, message):
     vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.\n\n/cancel - Cancel this process.**")
+    
     msg = await bot.listen(chat_id=message.chat.id)
+    
     if msg.text == '/cancel':
         await vj.delete()
+        await msg.delete()  # Optionally delete the cancellation message
         await message.reply("Canceled this process.")
         return
 
-
-    if vj.text:
-        regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
-        match = regex.match(vj.text)
+    if msg.text:
+        regex = re.compile(r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
+        match = regex.match(msg.text)
         if not match:
             return await vj.reply('Invalid link\n\nTry again by /index')
         chat_id = match.group(4)
         last_msg_id = int(match.group(5))
         if chat_id.isnumeric():
-            chat_id  = int(("-100" + chat_id))
-    elif vj.forward_from_chat.type == enums.ChatType.CHANNEL:
-        last_msg_id = vj.forward_from_message_id
-        chat_id = vj.forward_from_chat.username or vj.forward_from_chat.id
+            chat_id = int("-100" + chat_id)
+    elif msg.forward_from_chat and msg.forward_from_chat.type == enums.ChatType.CHANNEL:
+        last_msg_id = msg.forward_from_message_id
+        chat_id = msg.forward_from_chat.username or msg.forward_from_chat.id
     else:
         return
+
     try:
         await bot.get_chat(chat_id)
     except ChannelInvalid:
@@ -130,38 +133,28 @@ async def send_for_index(bot, message):
         return await vj.reply('Invalid Link specified.')
     except Exception as e:
         logger.exception(e)
-        return await vj.reply(f'Errors - {e}')
+        return await vj.reply(f'Error: {e}')
+
     try:
         k = await bot.get_messages(chat_id, last_msg_id)
-    except:
-        return await message.reply('Make Sure That Iam An Admin In The Channel, if channel is private')
-    if k.empty:
-        return await message.reply('This may be group and iam not a admin of the group.')
+    except Exception as e:
+        logger.exception(e)
+        return await message.reply('Make sure that I am an admin in the channel if it is private.')
+
+    if not k:
+        return await message.reply('This may be a group and I am not an admin of the group.')
 
     if message.from_user.id in Config.ADMINS:
         buttons = [
-            [
-                InlineKeyboardButton(
-                    "Yes",
-                    callback_data=f"index#accept#{chat_id}#{last_msg_id}#{message.from_user.id}",
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "Series Only Yes",
-                    callback_data=f"seriesindex#accept#{chat_id}#{last_msg_id}#{message.from_user.id}",
-                )
-            ],
-            [
-                InlineKeyboardButton("close", callback_data="close_data"),
-            ],
+            [InlineKeyboardButton("Yes", callback_data=f"index#accept#{chat_id}#{last_msg_id}#{message.from_user.id}")],
+            [InlineKeyboardButton("Series Only Yes", callback_data=f"seriesindex#accept#{chat_id}#{last_msg_id}#{message.from_user.id}")],
+            [InlineKeyboardButton("Close", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         return await message.reply(
-            f"Do you Want To Index This Channel/ Group ?\n\nChat ID/ Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>",
-            reply_markup=reply_markup,
+            f"Do you want to index this channel/group?\n\nChat ID/Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>",
+            reply_markup=reply_markup
         )
-
 
 @Client.on_message(filters.command("setskip") & filters.user(Config.ADMINS))  # type: ignore
 async def set_skip_number(bot: Client, message: types.Message):
