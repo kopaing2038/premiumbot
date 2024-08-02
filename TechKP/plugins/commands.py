@@ -475,51 +475,49 @@ async def help_handler(bot: Client, msg: types.Message):
 @Client.on_message(filters.command("stats"))  # type: ignore
 async def get_stats(_, msg: types.Message):
     msgs = await msg.reply("Fetching MongoDb DataBase")
-    
-    try:
-        totalp = await a_filter.col.count_documents({})
-        totalsec = await b_filter.col.count_documents({})
-        users = await db.get_uall_user()
-        chats = await db.get_all_chats()
-        premium_users = await db.get_all_premium()
+    totalp = await a_filter.col.count_documents({})
+    totalsec = await b_filter.col.count_documents({})
+    users = await db.get_uall_user()
+    chats = await db.get_all_chats()
+    premium_users = await db.get_all_premium()
         
-        stats = await db1.command('dbStats')
-        used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
-        free_dbSize = 512 - used_dbSize
+    stats = await db1.command('dbStats')
+    used_dbSize = (stats['dataSize']/(1024*1024))+(stats['indexSize']/(1024*1024))
+    free_dbSize = 512 - used_dbSize
         
-        stats2 = await db2.command('dbStats')
-        used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
-        free_dbSize2 = 512 - used_dbSize2
+    stats2 = await db2.command('dbStats')
+    used_dbSize2 = (stats2['dataSize']/(1024*1024))+(stats2['indexSize']/(1024*1024))
+    free_dbSize2 = 512 - used_dbSize2
         
-        cpu = cpu_percent()
-        bot_uptime = get_time(time.time() - Cache.BOT_START_TIME)
-        total_disk = get_size(disk_usage('/').total)
-        used_disk = get_size(disk_usage('/').used)
-        total_ram = get_size(virtual_memory().total)
-        used_ram = get_size(virtual_memory().used)
-        os_uptime = get_time(time.time() - boot_time())
+    cpu = cpu_percent()
+    bot_uptime = get_time(time.time() - Cache.BOT_START_TIME)
+    total_disk = get_size(disk_usage('/').total)
+    used_disk = get_size(disk_usage('/').used)
+    total_ram = get_size(virtual_memory().total)
+    used_ram = get_size(virtual_memory().used)
+    os_uptime = get_time(time.time() - boot_time())
         
-        formatted_text = script.STATUS_TXT.format(
-            (int(totalp) + int(totalsec)), 
-            premium_users, 
-            users, 
-            chats, 
-            totalp, 
-            round(used_dbSize, 2), 
-            round(free_dbSize, 2), 
-            totalsec, 
-            round(used_dbSize2, 2), 
-            round(free_dbSize2, 2), 
-            cpu, 
-            used_disk, 
-            total_disk, 
-            used_ram, 
-            total_ram, 
-            bot_uptime, 
-            os_uptime
-        )
+    formatted_text = script.STATUS_TXT.format(
+        (int(totalp) + int(totalsec)), 
+        premium_users, 
+        users, 
+        chats, 
+        totalp, 
+        round(used_dbSize, 2), 
+        round(free_dbSize, 2), 
+        totalsec, 
+        round(used_dbSize2, 2), 
+        round(free_dbSize2, 2), 
+        cpu, 
+        used_disk, 
+        total_disk, 
+        used_ram, 
+        total_ram, 
+        bot_uptime, 
+        os_uptime
+    )
         
-        await msgs.edit_text(text=formatted_text)
+    await msgs.edit_text(text=formatted_text)
     
     except Exception as e:
         await msgs.edit_text(f"An error occurred: {str(e)}")
