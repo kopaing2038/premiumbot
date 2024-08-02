@@ -404,7 +404,7 @@ async def start_handler(bot: Client, msg: types.Message):
 
 
 
-@Client.on_callback_query(filters.regex("help"))  # type: ignore
+@Client.on_callback_query(filters.regex("helps"))  # type: ignore
 async def help_handler_query(bot: Client, query: types.CallbackQuery):
     await query.answer()
     await query.edit_message_text(
