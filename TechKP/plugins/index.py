@@ -17,10 +17,82 @@ logger = LOGGER("INDEX")
 lock = asyncio.Lock()
 _REGEX = r"(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$"
 
+@Client.on_callback_query(filters.regex(r"^index"))  # type: ignore
+async def index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("index_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="index_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
+
+@Client.on_callback_query(filters.regex(r"^seriesindex"))  # type: ignore
+async def series_index_files(bot: Client, query: types.CallbackQuery):
+    if query.data.startswith("seriesindex_cancel"):  # type: ignore
+        Cache.CANCEL = True  # type: ignore
+        return await query.answer("Cancelling Indexing")
+    _, sts, chat, lst_msg_id, from_user = query.data.split("#")  # type: ignore
+    if sts == "reject":
+        await query.message.delete()
+        await bot.send_message(
+            int(from_user),
+            f"Your Submission for indexing {chat} has been declined by our moderators.",
+            reply_to_message_id=int(lst_msg_id),
+        )
+        return
+
+    if lock.locked():
+        return await query.answer("Wait until previous process complete.", show_alert=True)
+    msg = query.message
+
+    await query.answer("Processing...⏳", show_alert=True)
+
+    await msg.edit(
+        "Starting Indexing",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Cancel", callback_data="seriesindex_cancel")]]
+        ),
+    )
+    try:
+        chat = int(chat)
+    except:
+        chat = chat
+    await series_index_files_to_db(int(lst_msg_id), chat, msg, bot)  # type: ignore
 
 @Client.on_message(filters.private & filters.command('index'))
 async def send_for_index(bot, message):
-    vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.**")
+    vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.\n\n/cancel - Cancel this process.**")
+    
+    if vj.text == '/cancel':
+        await vj.delete()
+        await message.reply("Canceled this process.")
+        return
+
+
     if vj.text:
         regex = re.compile("(https://)?(t\.me/|telegram\.me/|telegram\.dog/)(c/)?(\d+|[a-zA-Z_0-9]+)/(\d+)$")
         match = regex.match(vj.text)
@@ -53,28 +125,15 @@ async def send_for_index(bot, message):
 
     if message.from_user.id in Config.ADMINS:
         buttons = [
-            [
-                InlineKeyboardButton(
-                    "Yes",
-                    callback_data=f"index#accept#{chat_id}#{last_msg_id}#{message.from_user.id}",
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "Series Only Yes",
-                    callback_data=f"seriesindex#accept#{chat_id}#{last_msg_id}#{message.from_user.id}",
-                )
-            ],
-            [
-                InlineKeyboardButton("close", callback_data="close_data"),
-            ],
+            [InlineKeyboardButton("Yes", callback_data=f"index#accept#{chat_id}#{last_msg_id}#{message.from_user.id}")],
+            [InlineKeyboardButton("Series Only Yes", callback_data=f"seriesindex#accept#{chat_id}#{last_msg_id}#{message.from_user.id}")],
+            [InlineKeyboardButton("Close", callback_data="close_data")]
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         return await message.reply(
-            f"Do you Want To Index This Channel/ Group ?\n\nChat ID/ Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>",
-            reply_markup=reply_markup,
+            f"Do you want to index this channel/group?\n\nChat ID/Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>",
+            reply_markup=reply_markup
         )
-
 
 @Client.on_message(filters.command("setskip") & filters.user(Config.ADMINS))  # type: ignore
 async def set_skip_number(bot: Client, message: types.Message):
@@ -309,4 +368,4 @@ async def series_index_files_to_db(lst_msg_id: int, chat: int, msg: types.Messag
                 f"Time Taken: <code>{time_taken}</code>\n\nSuccessfully saved <code>{total_files} / {current}</code> to dataBase!\nDuplicate Files Skipped: <code>{duplicate}</code>\nDeleted Messages Skipped: <code>{deleted}</code>\nNon-Media messages skipped: <code>{no_media + unsupported}</code>(Unsupported Media - `{unsupported}` )\nErrors Occurred: <code>{errors}</code>"
             )
 
-#
+
