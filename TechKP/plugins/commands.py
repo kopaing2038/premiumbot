@@ -473,7 +473,7 @@ async def help_handler(bot: Client, msg: types.Message):
 
 @Client.on_message(filters.command("stats"))  # type: ignore
 async def get_stats(_, msg: types.Message):
-        msgs = await msg.answer("Fetching MongoDb DataBase")
+        msgs = await msg.reply("Fetching MongoDb DataBase")
         totalp = await a_filter.col.count_documents({})
         #secondary db
         totalsec = await b_filter.col.count_documents({})
