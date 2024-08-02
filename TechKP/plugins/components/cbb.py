@@ -102,7 +102,7 @@ async def series_index_files(bot: Client, query: types.CallbackQuery):
 async def send_for_index(bot, message):
     vj = await bot.ask(message.chat.id, "**Now Send Me Your Channel Last Post Link Or Forward A Last Message From Your Index Channel.\n\n/cancel - Cancel this process.**")
     msg = await bot.listen(chat_id=message.chat.id)
-    if vj.text == '/cancel':
+    if msg.text == '/cancel':
         await vj.delete()
         await message.reply("Canceled this process.")
         return
