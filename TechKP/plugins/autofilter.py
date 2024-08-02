@@ -1029,7 +1029,7 @@ async def series_cb_handler(bot: Client, query: types.CallbackQuery):
         btn = []
         for series in series_list:                                    
             btn.append([types.InlineKeyboardButton(series, callback_data=f"seri#{series[:10]}#{key}#{0}#{offset}#{req}")])
-            btn.append([types.InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ ᴍᴀɪɴ ᴘᴀɢᴇ", callback_data=f"next_{req}_{key}_{0}")])
+        btn.append([types.InlineKeyboardButton(text="⪻ ʙᴀᴄᴋ ᴛᴏ ᴍᴀɪɴ ᴘᴀɢᴇ", callback_data=f"next_{req}_{key}_{0}")])
         await query.message.edit_text(text=cap, reply_markup=types.InlineKeyboardMarkup(btn))
     else:
         await query.message.edit_text("No series found.")
