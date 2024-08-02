@@ -26,7 +26,7 @@ from imdb import Cinemagoer
 from ..database import a_filter, b_filter
 import re, time, datetime
 from ..utils.botTools import get_readable_time
-from ..index import index_files_to_db, series_index_files_to_db
+from ...index import index_files_to_db, series_index_files_to_db
 
 logger = LOGGER("INDEX")
 ia = Cinemagoer()
