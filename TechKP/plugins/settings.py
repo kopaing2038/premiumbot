@@ -17,7 +17,7 @@ async def handle_settings(bot: Client, msg: types.Message):
     )
 
 
-@Client.on_callback_query(filters.regex("^settings"))  # type: ignore
+#@Client.on_callback_query(filters.regex("^settings"))  # type: ignore
 async def setup_settings(bot: Client, query: types.CallbackQuery):
     if query.from_user.id not in Config.ADMINS:
         return await query.answer("This is not for you!")
