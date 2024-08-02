@@ -22,6 +22,9 @@ from datetime import datetime, timedelta, date
 from pyrogram.file_id import FileId
 from TechKP.database.db import db
 from TechKP.database.join_reqs import JoinReqs
+from shortzy import Shortzy
+from psutil import virtual_memory, disk_usage, cpu_percent, boot_time
+
 
 log = LOGGER(__name__)
 join_db = JoinReqs
@@ -211,7 +214,20 @@ async def start_handler(bot: Client, msg: types.Message):
                         pass
             await sts.delete()
             return
-
+    if len(message.command) == 2 and message.command[1] == 'premium':
+        if not await db.has_premium_access(msg.from_user.id):
+            btn = [       
+                [types.InlineKeyboardButton("Translate Myanmar", callback_data="translatemm")],        
+                [types.InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KOPAINGLAY15")],
+                [types.InlineKeyboardButton("⚠️ ᴄʟᴏsᴇ / ᴅᴇʟᴇᴛᴇ ⚠️", callback_data="close_data")]
+            ]
+            reply_markup = types.InlineKeyboardMarkup(btn)
+            await msg.reply_photo(
+                photo=Config.PAYMENT_QR,
+                caption=Config.PAYMENT_TEXT,
+                reply_markup=reply_markup
+            )
+            return
     if len(msg.command) != 2:
         buttons = [[
             types.InlineKeyboardButton('🔖 Join Our Group to Use Me', url="https://t.me/MKS_RequestGroup")
@@ -457,15 +473,38 @@ async def help_handler(bot: Client, msg: types.Message):
 
 @Client.on_message(filters.command("stats"))  # type: ignore
 async def get_stats(_, msg: types.Message):
-    count = await a_filter.col.count_documents({})  # type: ignore
-    count2 = await b_filter.col.count_documents({})  # type: ignore
-    users = await usersDB.total_users_count()
+        await query.answer("Fetching MongoDb DataBase")
+        buttons = [[
+            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data="start"),
+            InlineKeyboardButton('⟲ Rᴇғʀᴇsʜ', callback_data='rfrsh')
+        ]]
+        reply_markup = InlineKeyboardMarkup(buttons)
+        totalp = await a_filter.col.count_documents({})
+        #secondary db
+        totalsec = await b_filter.col.count_documents({})
+        users = await db.get_uall_user()
+        chats = await db.get_all_chats()
+	    premium_users = await db.get_all_premium()
+        #primary db
+        primary_u_size = (await a_filter.db.command("dbstats"))["dataSize"]
+        primary_f_size = 536870912 - primary_u_size
 
-    await msg.reply(
-        f"**Stats**\n\n**Total Files**: `{count}`"
-        f"\n**Total Files**: `{count2}`"
-        f"\nTotal Users: {users}"
-    )
+        #secondary db
+        secondary_u_size = (await b_filter.db.command("dbstats"))["dataSize"]
+        secondary_f_size = 536870912 - secondary_u_size
+
+        cpu = cpu_percent()
+        bot_uptime = get_time(times.time() - temp.BOT_START_TIME)
+        total_disk = get_size(disk_usage('/').total)
+        used_disk = get_size(disk_usage('/').used)
+        total_ram = get_size(virtual_memory().total)
+        used_ram = get_size(virtual_memory().used)
+        os_uptime = get_time(times.time() - boot_time())
+        await query.message.edit_text(
+            text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
+            reply_markup=reply_markup,
+            parse_mode=enums.ParseMode.HTML
+        )
 
 
 @Client.on_message(filters.command("delete") & filters.user(Config.ADMINS))  # type: ignore
