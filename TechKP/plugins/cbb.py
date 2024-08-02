@@ -1,7 +1,7 @@
 import logging, asyncio, time, pytz, re, os, math, random
 import json
 import pyrogram
-from pyrogram import handlers, types
+from pyrogram.handlers import CallbackQueryHandler
 from pyrogram import errors, filters, types, Client, enums
 from ..database import configDB as config_db
 from ..utils.botTools import CONFIGURABLE, get_bool, get_buttons
@@ -602,5 +602,11 @@ async def csdb_handler(client: Client, query: CallbackQuery):
 
 
 
-Client.add_handler(csdb_handler)
+callback_query_handler = CallbackQueryHandler(csdb_handler)
+
+# Add the handler to the client
+Client.add_handler(callback_query_handler)
+
+
+
 
