@@ -193,3 +193,32 @@ Yᴏᴜʀ <ul>ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ</ul> ᴡɪʟʟ ʙᴇ ᴀᴄᴛɪᴠ
 ᴄʟɪᴄᴋ ᴛʜᴇ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴛᴏ ᴄᴏɴᴛɪɴᴜᴇ ʙᴜʏɪɴɢ ↡↡↡
 </b>"""
 
+
+    STATUS_TXT = """<b>Tᴏᴛᴀʟ Fɪʟᴇs Fʀᴏᴍ Bᴏᴛʜ DBs: <code>{}</code>
+
+<blockquote>Bᴏᴛ Usᴇʀs ᴀɴᴅ Cʜᴀᴛs Cᴏᴜɴᴛ</blockquote>
+★ Pʀᴇᴍɪᴜᴍ Usᴇʀs: <code>{}</code>
+★ Tᴏᴛᴀʟ Usᴇʀs: <code>{}</code>
+★ Tᴏᴛᴀʟ Cʜᴀᴛs: <code>{}</code>
+★ Tᴏᴛᴀʟ Bᴏᴛs: <code>{}</code>
+
+<blockquote>Pʀɪᴍᴀʀʏ Dᴀᴛᴀʙᴀsᴇ Sᴛᴀᴛɪsᴛɪᴄs</blockquote>
+★ Tᴏᴛᴀʟ Fɪʟᴇs: <code>{}</code>
+★ Usᴇᴅ Sᴛᴏʀᴀɢᴇ: <code>{} MB</code>
+★ Fʀᴇᴇ Sᴛᴏʀᴀɢᴇ: <code>{} MB</code>
+
+<blockquote>Sᴇᴄᴏɴᴅᴀʀʏ Dᴀᴛᴀʙᴀsᴇ Sᴛᴀᴛɪsᴛɪᴄs</blockquote>
+★ Tᴏᴛᴀʟ Fɪʟᴇs: <code>{}</code>
+★ Usᴇᴅ Sᴛᴏʀᴀɢᴇ: <code>{} MB</code>
+★ Fʀᴇᴇ Sᴛᴏʀᴀɢᴇ: <code>{} MB</code>
+
+<blockquote>Bᴏᴛ ᴀɴᴅ OS Sᴛᴀᴛɪsᴛɪᴄs</blockquote>
+★ Cᴘᴜ: <code>{} %</code>
+★ Sᴛᴏʀᴀɢᴇ: <code>{} / {}</code>
+★ Rᴀᴍ: <code>{} / {}</code>
+★ Bᴏᴛ Uᴘᴛɪᴍᴇ: <code>{}</code>
+★ OS Uᴘᴛɪᴍᴇ: <code>{}</code>
+
+★ Maintained by : @KPDeveloper
+
+</b>"""
