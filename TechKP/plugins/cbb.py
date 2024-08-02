@@ -8,7 +8,7 @@ from ..utils.logger import LOGGER
 from ..config import Config
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
-
+from TechKP.database.db import db 
 from ..utils.botTools import (
     check_fsub,
     format_buttons,
@@ -66,6 +66,77 @@ async def setup_settings(bot: Client, query: types.CallbackQuery):
         await query.edit_message_reply_markup(types.InlineKeyboardMarkup(get_buttons(settings)))  # type: ignore
     except errors.MessageNotModified:
         pass  # You might want to handle this exception if needed
+
+
+@Client.on_callback_query(filters.regex(r"^free_users_next"))
+async def free_users_next_page(client, query):
+    _, offset = query.data.split("#")
+    offset = int(offset)
+    users, n_offset, total, max_btn = await handle_next_back(await db.get_all_users(), offset=offset, max_results=30)
+    b_offset = offset - max_btn
+
+    if n_offset == 0:
+        btn = [[
+            InlineKeyboardButton("Back", callback_data=f"free_users_next#{b_offset}"),
+            InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar")
+        ]]
+    elif offset == 0:
+        btn = [[
+            InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
+            InlineKeyboardButton("Next", callback_data=f"free_users_next#{n_offset}")
+        ]]
+    else:
+        btn = [[
+            InlineKeyboardButton("Back", callback_data=f"free_users_next#{b_offset}"),
+            InlineKeyboardButton(f"{math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
+            InlineKeyboardButton("Next", callback_data=f"free_users_next#{n_offset}")
+        ]]
+
+    text = ""
+    for user_num, user in enumerate(users, start=offset+1):
+        try:
+            user_info = await client.get_users([user['id']])
+            text += f"{user_num}. <a href='tg://user?id={user['id']}'>{user_info[0].mention}</a> [<code>{user['id']}</code>]\n\n"
+        except (PeerIdInvalid, ChannelInvalid, BadRequest) as e:
+            logging.warning(f"Invalid user ID: {user['id']} - Error: {str(e)}")
+            text += f"{user_num}. <code>{user['id']}</code> (Invalid ID)\n\n"
+    await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
+
+
+@Client.on_callback_query(filters.regex(r"^premium_next"))
+async def premium_users_dbnext_page(client, query):
+    _, offset = query.data.split("#")
+    offset = int(offset)
+    users, n_offset, total, max_btn = await handle_next_back(await db.get_premium_users(), offset=offset, max_results=30)
+    b_offset = offset - max_btn
+
+    if n_offset == 0:
+        btn = [[
+            InlineKeyboardButton("Back", callback_data=f"premium_next#{b_offset}"),
+            InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar")
+        ]]
+    elif offset == 0:
+        btn = [[
+            InlineKeyboardButton(f"Page {math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
+            InlineKeyboardButton("Next", callback_data=f"premium_next#{n_offset}")
+        ]]
+    else:
+        btn = [[
+            InlineKeyboardButton("Back", callback_data=f"premium_next#{b_offset}"),
+            InlineKeyboardButton(f"{math.ceil(offset / max_btn) + 1} / {math.ceil(total / max_btn)}", callback_data="bar"),
+            InlineKeyboardButton("Next", callback_data=f"premium_next#{n_offset}")
+        ]]
+
+    text = ""
+    for user_num, user in enumerate(users, start=offset+1):
+        try:
+            user_info = await client.get_users(user['_id'])
+            text += f"{user_num}. <a href='tg://user?id={user['_id']}'>{user_info.mention}</a> [<code>{user['_id']}</code>]\n\n"
+        except PeerIdInvalid:
+            logging.warning(f"Invalid user ID: {user['_id']}")
+            text += f"{user_num}. <code>{user['_id']}</code> (Invalid ID)\n\n"
+    await query.message.edit_text(text, reply_markup=InlineKeyboardMarkup(btn))
+
 
 
 @Client.on_callback_query()
