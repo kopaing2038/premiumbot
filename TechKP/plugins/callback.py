@@ -8,6 +8,7 @@ from ..utils.logger import LOGGER
 from ..config import Config
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
+
 from ..utils.botTools import (
     check_fsub,
     format_buttons,
@@ -23,7 +24,7 @@ from imdb import Cinemagoer
 ia = Cinemagoer()
 
 @Client.on_callback_query()
-async def cbbergwrg_hanqrgqgdler(client: Client, query):
+async def csdb_handler(client: Client, query: CallbackQuery):
     if query.data == "close_data":
         try:
             user = query.message.reply_to_message.from_user.id
