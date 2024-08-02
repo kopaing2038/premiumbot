@@ -251,7 +251,7 @@ async def start_handler(bot: Client, msg: types.Message):
         reply_markup = types.InlineKeyboardMarkup(buttons)
         await msg.reply_photo(
             photo=random.choice(Config.START_IMG), 
-            caption=script.START_TXT.format(msg.from_user.mention, get_status(), msg.from_user.id),
+            caption=script.START_TXT.format(msg.from_user.mention if msg.from_user else msg.chat.title, Cache.U_NAME, Cache.B_NAME, get_status()),
             reply_markup=reply_markup,
         )
         return
