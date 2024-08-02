@@ -2,6 +2,8 @@ import logging, asyncio, time, pytz, re, os, math, random
 import json
 import pyrogram
 from pyrogram import errors, filters, types, Client, enums
+from ...database import configDB as config_db
+from ...utils.botTools import CONFIGURABLE, get_bool, get_buttons
 from TechKP.config.Script import script
 from ...utils.cache import Cache
 from ...utils.logger import LOGGER
@@ -25,10 +27,6 @@ ia = Cinemagoer()
 
 
 
-from ..config import Config
-from pyrogram import enums, errors, filters, types, Client
-from ..database import configDB as config_db
-from ..utils.botTools import CONFIGURABLE, get_bool, get_buttons
 
 
 @Client.on_message(filters.command("gsettings") & filters.user(Config.ADMINS))  # type: ignore
