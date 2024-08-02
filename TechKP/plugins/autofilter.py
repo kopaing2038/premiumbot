@@ -102,24 +102,25 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
         search = message.text
         chat_id = message.chat.id
 
-
-        settings = await config_db.get_settings(f"SETTINGS_{message.chat.id}")
-        search = message.text
-        files, offset, total_results = await a_filter.get_search_results(
-            search.lower(), offset=0, filter=True, photo=settings['PHOTO_FILTER']
-        )
-        if not files:
-            if settings["SPELL_CHECK"]:
-                ai_sts = await msg.reply_text('<b>Ai is Cheking For Your Spelling. Please Wait.</b>')
-                is_misspelled = await ai_spell_check(search)
-                if is_misspelled:
-                    await ai_sts.edit(f'<b>Ai Suggested <code>{is_misspelled}</code>\nSo Im Searching for <code>{is_misspelled}</code></b>')
-                    await asyncio.sleep(2)
-                    msg.text = is_misspelled
+        if 2 < len(message.text) < 200:
+            settings = await config_db.get_settings(f"SETTINGS_{message.chat.id}")
+            search = message.text
+            files, offset, total_results = await a_filter.get_search_results(
+                search.lower(), offset=0, filter=True, photo=settings['PHOTO_FILTER']
+            )
+            if not files:
+                if settings["SPELL_CHECK"]:
+                    ai_sts = await msg.reply_text('<b>Ai is Cheking For Your Spelling. Please Wait.</b>')
+                    is_misspelled = await ai_spell_check(search)
+                    if is_misspelled:
+                        await ai_sts.edit(f'<b>Ai Suggested <code>{is_misspelled}</code>\nSo Im Searching for <code>{is_misspelled}</code></b>')
+                        await asyncio.sleep(2)
+                        msg.text = is_misspelled
+                        await ai_sts.delete()
+                        return await auto_filter(bot, msg)
                     await ai_sts.delete()
-                    return await auto_filter(bot, msg)
-                await ai_sts.delete()
-                return await advantage_spell_chok(msg)
+                    return await advantage_spell_chok(msg)
+                return
             return
 
     else:
