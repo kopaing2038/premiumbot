@@ -41,4 +41,3 @@ async def setup_settings(bot: Client, query: types.CallbackQuery):
     except errors.MessageNotModified:
         pass  # You might want to handle this exception if needed
 
-
