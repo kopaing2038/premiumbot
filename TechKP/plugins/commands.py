@@ -473,12 +473,7 @@ async def help_handler(bot: Client, msg: types.Message):
 
 @Client.on_message(filters.command("stats"))  # type: ignore
 async def get_stats(_, msg: types.Message):
-        await query.answer("Fetching MongoDb DataBase")
-        buttons = [[
-            InlineKeyboardButton('⟸ Bᴀᴄᴋ', callback_data="start"),
-            InlineKeyboardButton('⟲ Rᴇғʀᴇsʜ', callback_data='rfrsh')
-        ]]
-        reply_markup = InlineKeyboardMarkup(buttons)
+        await msg.reply("Fetching MongoDb DataBase")
         totalp = await a_filter.col.count_documents({})
         #secondary db
         totalsec = await b_filter.col.count_documents({})
@@ -500,7 +495,7 @@ async def get_stats(_, msg: types.Message):
         total_ram = get_size(virtual_memory().total)
         used_ram = get_size(virtual_memory().used)
         os_uptime = get_time(times.time() - boot_time())
-        await query.message.edit_text(
+        await msg.edit_text(
             text=script.STATUS_TXT.format((int(totalp)+int(totalsec)), premium_users, users, chats, totalp, primary_u_size, primary_f_size, totalsec, secondary_u_size, secondary_f_size, cpu, used_disk, total_disk, used_ram, total_ram, bot_uptime, os_uptime),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
