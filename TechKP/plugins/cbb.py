@@ -601,11 +601,10 @@ async def csdb_handler(client: Client, query: CallbackQuery):
         await query.answer(url=f"https://telegram.me/{Cache.U_NAME}?start=files_{file_id}")
 
 
-
 callback_query_handler = CallbackQueryHandler(csdb_handler)
 
-# Add the handler to the client
-Client.add_handler(callback_query_handler)
+
+Cache.BOT.add_handler(callback_query_handler)
 
 
 
