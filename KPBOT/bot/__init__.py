@@ -1,13 +1,10 @@
-
 import logging
-from pyrogram import Client
+from pyrogram import Client, types, handlers
 from pyromod import listen
 from TechKP.config.config import Config
 from TechKP.utils.cache import Cache
 from typing import Union, Optional, AsyncGenerator
-from pyrogram import types
 from aiohttp import web
-from pyrogram import Client
 
 
 class TechKPXBot(Client):
@@ -42,7 +39,49 @@ class TechKPXBot(Client):
                 yield message
                 current += 1
 
-TechKPBot = TechKPXBot()
+
+async def resolve_listener(
+    client: TechKPXBot,
+    update: Union[types.CallbackQuery, types.Message, types.InlineQuery, types.ChosenInlineResult],
+):
+    if isinstance(update, types.CallbackQuery):
+        if update.message:
+            key = f"{update.message.chat.id}:{update.message.id}"
+        elif update.inline_message_id:
+            key = update.inline_message_id
+        else:
+            return
+    elif isinstance(update, (types.ChosenInlineResult, types.InlineQuery)):
+        key = str(update.from_user.id)
+    else:
+        key = str(update.chat.id)  # type: ignore
+
+    listener = client.listeners.get(key)
+
+    if listener and not listener["future"].done():  # type: ignore
+        if callable(listener["filters"]):
+            if not await listener["filters"](client, update):
+                update.continue_propagation()
+        listener["future"].set_result(update)  # type: ignore
+        update.stop_propagation()
+    else:
+        if listener and listener["future"].done():  # type: ignore
+            client.remove_listener(key, listener["future"])
+
+
+class KP(TechKPXBot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    async def start(self, *args, **kwargs):
+        self.add_handler(handlers.CallbackQueryHandler(resolve_listener), group=-2)
+        self.add_handler(handlers.InlineQueryHandler(resolve_listener), group=-2)
+        self.add_handler(handlers.ChosenInlineResultHandler(resolve_listener), group=-2)
+        self.add_handler(handlers.MessageHandler(resolve_listener), group=-2)
+        await super().start(*args, **kwargs)
+
+
+TechKPBot = KP()
 
 multi_clients = {}
 work_loads = {}
