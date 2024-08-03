@@ -147,3 +147,4 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
     URL = environ.get("URL", "https://crooked-charla-mkschannels-4bd1c06f.koyeb.app/")
     BIN_CHANNEL = int(get_config("BIN_CHANNEL", '-1001254905376'))
     PORT = environ.get("PORT", "5000")
+    STREAM_MODE = environ.get('STREAM_MODE', True)
