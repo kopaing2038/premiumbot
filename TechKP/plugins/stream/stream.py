@@ -7,8 +7,9 @@ from KPBOT.util.human_readable import humanbytes
 import humanize
 import random
 
-@Client.on_message(filters.private & filters.command("stream"))
-async def stream_start(client, message):
+
+@Client.on_message(filters.command("stream") & filters.private)
+async def stream_vip_start(client, message):
     msg = await client.ask(message.chat.id, "**Now send me your file/video to get stream and download link**")
     if not msg.media:
         return await message.reply("**Please send me supported media.**")
