@@ -283,12 +283,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
             )
 
             button = [[
-                InlineKeyboardButton("🚀 Fast Download 🚀", callback_data=f"download_link:{download}"),
-                InlineKeyboardButton('🖥️ Watch online 🖥️', callback_data=f"stream_link:{stream}")
+                InlineKeyboardButton("🚀 Fast Download 🚀", url=download),
+                InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)
             ]]
             await query.message.reply_text(
                 text="•• ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ☠︎⚔",
                 quote=True,
+		protect_content=True
                 disable_web_page_preview=True,
                 reply_markup=InlineKeyboardMarkup(button)
             )
