@@ -12,6 +12,7 @@ from ..config import Config
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid, ChatAdminRequired
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
 from TechKP.database.db import db 
+from urllib.parse import quote_plus
 from ..utils.botTools import (
     check_fsub,
     format_buttons,
