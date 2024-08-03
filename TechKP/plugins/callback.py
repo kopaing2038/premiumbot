@@ -31,7 +31,7 @@ from ..utils.botTools import get_readable_time
 from TechKP.plugins.index import index_files_to_db, series_index_files_to_db, lock
 from shortzy import Shortzy
 from psutil import virtual_memory, disk_usage, cpu_percent, boot_time
-
+from KPBOT.util.file_properties import get_name, get_hash, get_media_file_size
 
 logger = LOGGER("INDEX")
 ia = Cinemagoer()
