@@ -10,6 +10,8 @@ import random
 
 @Client.on_message(filters.command("stream") & filters.private)
 async def stream_vip_start(client, message):
+    if Config.STREAM_MODE == False:
+        return 
     msg = await client.ask(message.chat.id, "**Now send me your file/video to get stream and download link**")
     if not msg.media:
         return await message.reply("**Please send me supported media.**")
