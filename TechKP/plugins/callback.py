@@ -264,14 +264,20 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 file_id=file_id,
             )
             file_name = quote_plus(get_name(log_msg))
-            stream = f"{Config.URL}watch/{str(log_msg.id)}/{file_name}?hash={get_hash(log_msg)}"
-            download = f"{Config.URL}{str(log_msg.id)}/{file_name}?hash={get_hash(log_msg)}"
+            stream = f"{Config.URL}watch/{log_msg.id}/{file_name}?hash={get_hash(log_msg)}"
+            download = f"{Config.URL}{log_msg.id}/{file_name}?hash={get_hash(log_msg)}"
 
-            # Debug: Print URLs to check
-            print("Stream URL:", stream)
-            print("Download URL:", download)
+            # Debug URLs
+            print(f"Stream URL: {stream}")
+            print(f"Download URL: {download}")
 
-            xo = await query.message.reply_text(f'🔐')
+            # Validate URLs
+            if not (stream.startswith("http://") or stream.startswith("https://")):
+                raise ValueError("Invalid stream URL")
+            if not (download.startswith("http://") or download.startswith("https://")):
+                raise ValueError("Invalid download URL")
+
+            xo = await query.message.reply_text('🔐')
             await asyncio.sleep(1)
             await xo.delete()
 
@@ -279,21 +285,17 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 text=f"•• ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ꜰᴏʀ ɪᴅ #{user_id} \n•• ᴜꜱᴇʀɴᴀᴍᴇ : {username} \n\n•• ᖴᎥᒪᗴ Nᗩᗰᗴ : {file_name}",
                 quote=True,
                 disable_web_page_preview=True,
-                reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("🚀 Fast Download 🚀", url=download),
-                     InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)]
-                ])
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🚀 Fast Download 🚀", url=download),  # we download Link
+                                                    InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)]])  # web stream Link
             )
 
-            button = [
-                [
-                    InlineKeyboardButton("🚀 Fast Download 🚀", url=download),
-                    InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)
-                ],
-                [
-                    InlineKeyboardButton("• ᴡᴀᴛᴄʜ ɪɴ ᴡᴇʙ ᴀᴘᴘ •", web_app=WebAppInfo(url=stream))
-                ]
-            ]
+            button = [[
+                InlineKeyboardButton("🚀 Fast Download 🚀", url=download),
+                InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)
+            ],[
+                InlineKeyboardButton("• ᴡᴀᴛᴄʜ ɪɴ ᴡᴇʙ ᴀᴘᴘ •", web_app=WebAppInfo(url=stream))
+            ]]
+
             await query.message.reply_text(
                 text="•• ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ☠︎⚔",
                 quote=True,
@@ -301,10 +303,9 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 reply_markup=InlineKeyboardMarkup(button)
             )
         except Exception as e:
-            print(e)  # Print the error message
+            print(f"Error: {e}")  # Print the error message
             await query.answer(f"☣ Something went wrong sweetheart\n\n{e}", show_alert=True)
             return
-
 
 
     elif query.data == "start":
