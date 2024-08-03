@@ -308,6 +308,11 @@ async def start_handler(bot: Client, msg: types.Message):
                 caption=caption,
                 reply_markup=types.InlineKeyboardMarkup(button)
             )
+            await bot.send_cached_media(
+                chat_id=Config.VIP_DATABASE,
+                file_id=files1['file_id'],
+                caption=files1['file_name'],
+            )
             filesarr.append(msgs)
         k = await msg.reply(Config.DELETE_TEXT, quote=True)
         await asyncio.sleep(300)
@@ -414,6 +419,11 @@ async def start_handler(bot: Client, msg: types.Message):
         file_id=files['file_id'],
         caption=caption + f"🔋 Data Center ID : <code>{dc_id}</code>\n🚀 ဇာတ်ကားရှာဖွေမူမြန်နှုန်း {remaining_seconds} seconds</b>\n\n@Movie_Zone_KP",
         reply_markup=types.InlineKeyboardMarkup(button)
+    )
+    await bot.send_cached_media(
+        chat_id=Config.VIP_DATABASE,
+        file_id=files['file_id'],
+        caption=files['file_name']
     )
     btn = [[
         types.InlineKeyboardButton("Get File Again", callback_data=f'delfile#{file_id}')
