@@ -12,7 +12,9 @@ from TechKP.utils.cache import Cache
 from TechKP.config.config import Config
 from TechKP.utils.initialization import check_pending
 from TechKP.utils.logger import LOGGER
-
+from TechKP.plugins import web_server
+from aiohttp import web
+from KPBOT.util.keepalive import ping_server
 
 TechKPBot.start()
 loop = asyncio.get_event_loop()
@@ -59,7 +61,11 @@ async def start():
     
     tt = time.time() - st
     seconds = int(tt)
-    
+    app = web.AppRunner(await web_server())
+    await app.setup()
+    bind_address = "0.0.0.0"
+    await web.TCPSite(app, bind_address, Config.PORT).start()
+
     for admin in Config.ADMINS:
         await TechKPBot.send_message(
             chat_id=admin,
