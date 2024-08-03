@@ -1,7 +1,7 @@
 import re, math, logging, secrets, mimetypes, time
 from aiohttp import web
 from aiohttp.http_exceptions import BadStatusLine
-from KPBOT.bot import multi_clients, work_loads, TechVJBot
+from KPBOT.bot import multi_clients, work_loads, TechKPBot
 from KPBOT.server.exceptions import FIleNotFound, InvalidHash
 from KPBOT import StartTime, __version__
 from KPBOT.util.custom_dl import ByteStreamer
