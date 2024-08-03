@@ -148,3 +148,4 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
     BIN_CHANNEL = int(get_config("BIN_CHANNEL", '-1001254905376'))
     PORT = environ.get("PORT", "8000")
     STREAM_MODE = environ.get('STREAM_MODE', True)
+    MULTI_CLIENT = False
