@@ -18,7 +18,7 @@ async def render_page(id, secure_hash, src=None):
         raise InvalidHash
 
     src = urllib.parse.urljoin(
-        URL,
+        Config.URL,
         f"{id}/{urllib.parse.quote_plus(file_data.file_name)}?hash={secure_hash}",
     )
 
