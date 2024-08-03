@@ -350,6 +350,8 @@ async def start_handler(bot: Client, msg: types.Message):
                    types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
                 ],[
                     types.InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="t.me/KOPAINGLAY15")
+                ],[
+                    types.InlineKeyboardButton('🚀 Fast Download / Watch Online🖥️', callback_data=f'generate_stream_link:{file_id}')      
                 ]]
                 msgs = await bot.send_cached_media(
                     chat_id=msg.from_user.id,
@@ -412,6 +414,8 @@ async def start_handler(bot: Client, msg: types.Message):
         types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
     ],[
         types.InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="https://t.me/KOPAINGLAY15")
+    ],[
+        types.InlineKeyboardButton('🚀 Fast Download / Watch Online🖥️', callback_data=f'generate_stream_link:{file_id}')
     ]]
             
     msgs = await bot.send_cached_media(
