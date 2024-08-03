@@ -7,7 +7,7 @@ from KPBOT import StartTime, __version__
 from KPBOT.util.custom_dl import ByteStreamer
 from KPBOT.util.time_format import get_readable_time
 from KPBOT.util.render_template import render_page
-
+from TechKP.config.config import Config
 routes = web.RouteTableDef()
 
 @routes.get("/", allow_head=True)
@@ -66,7 +66,7 @@ async def media_streamer(request: web.Request, id: int, secure_hash: str):
     index = min(work_loads, key=work_loads.get)
     faster_client = multi_clients[index]
     
-    if MULTI_CLIENT:
+    if Config.MULTI_CLIENT:
         logging.info(f"Client {index} is now serving {request.remote}")
 
     if faster_client in class_cache:
