@@ -280,8 +280,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
             )
 
             button = [[
-                InlineKeyboardButton("🚀 Fast Download 🚀", url=download),
-                InlineKeyboardButton('🖥️ Watch online 🖥️', url=stream)
+                InlineKeyboardButton("🚀 Fast Download 🚀", callback_data=f"downlod_link:{download}"),
+                InlineKeyboardButton('🖥️ Watch online 🖥️', callback_data=f"stream_link:{stream}")
             ],[
                 InlineKeyboardButton("• ᴡᴀᴛᴄʜ ɪɴ ᴡᴇʙ ᴀᴘᴘ •", web_app=WebAppInfo(url=mks))
             ]]
@@ -296,7 +296,13 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.answer(f"☣something went wrong sweetheart\n\n{e}", show_alert=True)
             return
 
+    elif query.data.startswith("stream_link"):
+        _, stream = query.data.split(":")
+        await query.answer(f"{stream}", show_alert=True)
 
+    elif query.data.startswith("download_link"):
+        _, download = query.data.split(":")
+        await query.answer(f"{download}", show_alert=True)
 
     elif query.data == "start":
         buttons = [[
