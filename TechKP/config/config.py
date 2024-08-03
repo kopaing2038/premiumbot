@@ -144,7 +144,7 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
 
     #stream 
     PING_INTERVAL = int(environ.get("PING_INTERVAL", "1200"))  # 20 minutes
-    URL = environ.get("URL", "https://brave-erna-mkschannels-b351d2e3.koyeb.app/")
+    URL = environ.get("URL", "https://financial-tandie-mkschannels-22536958.koyeb.app/")
     BIN_CHANNEL = int(get_config("BIN_CHANNEL", '-1001254905376'))
     PORT = environ.get("PORT", "8000")
     STREAM_MODE = environ.get('STREAM_MODE', True)
