@@ -42,6 +42,7 @@ class Config:
     FORCE_SUB_CHANNEL = int(get_config("FORCE_SUB_CHANNEL", '-1002220103327'))
     REQUEST_CHANNEL = int(get_config("REQUEST_CHANNEL", '-1002220103327'))
     PREMIUMGP = int(environ.get('PREMIUMGP', '-1002075603295'))
+    VIP_DATABASE = int(environ.get('VIP_DATABASE', '-1002181788745'))
 
     START_IMG = (environ.get('START_IMG', 'https://graph.org/file/a7972e470acda58512c96.jpg https://graph.org/file/2fe6b8b98ad6be46c120b.jpg https://graph.org/file/22dfe609e517c6ab960b0.jpg https://graph.org/file/ab82371f728850bb27193.jpg https://graph.org/file/b25eb7857fa579db610c1.jpg')).split() #SAMPLE PIC
 
