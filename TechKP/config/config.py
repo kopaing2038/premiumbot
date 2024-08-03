@@ -140,3 +140,10 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
     GROUPS_LINK = "https://t.me/MKS_RequestGroup"
     CHANNEL_LINK = "https://t.me/addlist/FCNUqz3nfyM2MzBk"
     USERNAME = environ.get('USERNAME', "https://telegram.me/KOPAINGLAY15")
+
+
+    #stream 
+    PING_INTERVAL = int(environ.get("PING_INTERVAL", "1200"))  # 20 minutes
+    URL = environ.get("URL", "https://crooked-charla-mkschannels-4bd1c06f.koyeb.app/")
+    BIN_CHANNEL = int(get_config("BIN_CHANNEL", '-1001254905376'))
+
