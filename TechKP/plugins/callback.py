@@ -289,7 +289,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.message.reply_text(
                 text="•• ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ☠︎⚔",
                 quote=True,
-		protect_content=True
+		protect_content=True,
                 disable_web_page_preview=True,
                 reply_markup=InlineKeyboardMarkup(button)
             )
