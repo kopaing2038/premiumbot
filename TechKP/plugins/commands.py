@@ -286,9 +286,9 @@ async def start_handler(bot: Client, msg: types.Message):
             files_ = await a_filter.get_file_details(file_id)
             if not files_:
                 files_ = await b_filter.get_file_details(file_id)
-            if files_ is None:
-                await msg.reply('<b><i>No file details found for this file ID.</b></i>')
-                return
+                if not files_:
+                    await msg.reply('<b><i>No file details found for this file ID.</b></i>')
+                    return
             files1 = files_
             cur_time = datetime.now(pytz.timezone('Asia/Yangon')).time()
             time_difference = timedelta(hours=cur_time.hour, minutes=cur_time.minute, seconds=(cur_time.second+(cur_time.microsecond/1000000))) - timedelta(hours=curr_time.hour, minutes=curr_time.minute, seconds=(curr_time.second+(curr_time.microsecond/1000000)))
