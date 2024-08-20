@@ -291,9 +291,9 @@ async def start_handler(bot: Client, msg: types.Message):
             
             user_link = msg.from_user.mention if msg.from_user else "Unknown User" 
             caption = Config.CUSTOM_FILE_CAPTION.format(
-                file_name='@MKSVIPLINK1  ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['file_name']}</b></a>",
-                file_size=get_size(files1['file_size']),
-                caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['file_name']}</b></a>",
+                file_name='@MKSVIPLINK1  ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files['file_name']}</b></a>",
+                file_size=get_size(files['file_size']),
+                caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files['caption']}</b></a>",
                 user_link=user_link
             )
             button = [[
