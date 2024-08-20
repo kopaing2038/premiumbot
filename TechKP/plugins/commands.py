@@ -286,9 +286,14 @@ async def start_handler(bot: Client, msg: types.Message):
             files_ = await a_filter.get_file_details(file_id)
             if not files_:
                 files_ = await b_filter.get_file_details(file_id)
-
+            if files_ is None:
+                await msg.reply('<b><i>No file details found for this file ID.</b></i>')
+                return
             files1 = files_
-            
+            cur_time = datetime.now(pytz.timezone('Asia/Yangon')).time()
+            time_difference = timedelta(hours=cur_time.hour, minutes=cur_time.minute, seconds=(cur_time.second+(cur_time.microsecond/1000000))) - timedelta(hours=curr_time.hour, minutes=curr_time.minute, seconds=(curr_time.second+(curr_time.microsecond/1000000)))
+            remaining_seconds = "{:.2f}".format(time_difference.total_seconds())
+            dc_id=FileId.decode(files1['file_id']).dc_id 
             user_link = msg.from_user.mention if msg.from_user else "Unknown User" 
             caption = Config.CUSTOM_FILE_CAPTION.format(
                 file_name='@MKSVIPLINK1  ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['file_name']}</b></a>",
@@ -305,7 +310,7 @@ async def start_handler(bot: Client, msg: types.Message):
             msgs = await bot.send_cached_media(
                 chat_id=msg.from_user.id,
                 file_id=files1['file_id'],
-                caption=caption,
+                caption=caption + f"🔋 Data Center ID : <code>{dc_id}</code>\n🚀 ဇာတ်ကားရှာဖွေမူမြန်နှုန်း {remaining_seconds} seconds</b>\n\n@Movie_Zone_KP",
                 reply_markup=types.InlineKeyboardMarkup(button)
             )
             await bot.send_cached_media(
