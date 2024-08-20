@@ -282,7 +282,7 @@ async def start_handler(bot: Client, msg: types.Message):
             return
 
         for file in files:
-            file_id = file['_id']
+            file_id = file['file_id']
             files_ = await a_filter.get_file_details(file_id)
             if not files_:
                 files_ = await b_filter.get_file_details(file_id)
