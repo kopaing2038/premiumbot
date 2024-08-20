@@ -293,7 +293,7 @@ async def start_handler(bot: Client, msg: types.Message):
             caption = Config.CUSTOM_FILE_CAPTION.format(
                 file_name='@MKSVIPLINK1  ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['file_name']}</b></a>",
                 file_size=get_size(files1['file_size']),
-                caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['caption']}</b></a>",
+                caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{files1['file_name']}</b></a>",
                 user_link=user_link
             )
             button = [[
@@ -364,7 +364,7 @@ async def start_handler(bot: Client, msg: types.Message):
                 caption = Config.CUSTOM_FILE_CAPTION.format(
                     file_name='@MKSVIPLINK1  ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{file['file_name']}</b></a>",
                     file_size=get_size(file['file_size']),
-                    caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{file['caption']}</b></a>",
+                    caption='@MKSCHANNEL1 ' + f"<a href='https://t.me/+z5lhEpxP5Go4MWM1'><b>{file['file_name']}</b></a>",
                     user_link=user_link
                 )
                 await msgs.edit_caption(
