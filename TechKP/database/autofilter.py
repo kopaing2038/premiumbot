@@ -17,6 +17,40 @@ client2 = AsyncIOMotorClient(Config.SERIES_URI)
 db2 = client2[Config.SESSION_NAME]
 
 
+def check_if_series(file_name: str = "", caption: str = "") -> bool:
+    """
+    Determines if a file is a part of a series based on its file name or caption.
+    
+    Args:
+        file_name (str): The name of the file to check.
+        caption (str): The caption of the media to check (optional).
+    
+    Returns:
+        bool: True if the file is likely a part of a series, False if it's likely a movie.
+    """
+    # Normalize both file name and caption to lowercase for easier matching
+    file_name = file_name.lower() if file_name else ""
+    caption = caption.lower() if caption else ""
+    
+    # Regular expressions to detect common series naming patterns
+    series_patterns = [
+        r's(\d+)[eex](\d+)',  # Matches patterns like S01E01, s01e01, S1x01, etc.
+        r'season[ ._]?(\d+)[ ._]?episode[ ._]?(\d+)',  # Matches patterns like "season 1 episode 1", "season_1_episode_1"
+        r'ep[ ._]?(\d+)',  # Matches patterns like "ep1", "ep_01"
+        r'(\d+)x(\d+)',  # Matches patterns like "1x01", "10x05"
+        r'e(\d+)',  # Matches patterns like "e01"
+        r'season[ ._]?(\d+)',  # Matches patterns like "season 01", "season 1"
+        r's(\d+)',  # Matches patterns like "s1", "s2"
+    ]
+    
+    # Check if the file name or caption matches any series pattern
+    for pattern in series_patterns:
+        if re.search(pattern, file_name) or re.search(pattern, caption):
+            return True
+    
+    # If no series patterns are matched, it's likely a movie
+    return False
+
 
 class BaseFilterDb:
     def __init__(self, db_class):
@@ -132,6 +166,67 @@ class BaseFilterDb:
         files = await cursor.to_list(length=max_results)
 
         return files, next_offset, total_results
+
+
+    async def get_series_search_results(
+        self, 
+        query: str, 
+        file_type: str = None, 
+        max_results: int = 8, 
+        offset: int = 0, 
+        filter: bool = False, 
+        photo: bool = True
+    ):  
+        """For a given query return (results, next_offset)"""
+
+        query = query.strip()
+
+        if not query:
+            raw_pattern = "."
+        elif " " not in query:
+            raw_pattern = r"(\b|[\.\+\-_])" + query + r"(\b|[\.\+\-_])"
+        else:
+            raw_pattern = query.replace(" ", r".*[\s\.\+\-_]")
+
+        try:
+            regex = re.compile(raw_pattern, flags=re.IGNORECASE)
+        except:
+            return []
+
+        if Config.USE_CAPTION_FILTER:
+            filter_ = {"$or": [{"file_name": regex}, {"caption": regex}]}  # type: ignore
+        else:
+            filter_ = {"file_name": regex}  # type: ignore
+
+        if not photo:
+            filter_ = {"$and": [filter_, {"file_type": {"$ne": "photo"}}]}
+
+        total_results = await self.col.count_documents(filter_)  # type: ignore
+        next_offset = offset + max_results
+
+        if next_offset > total_results:
+            next_offset = ""
+
+        cursor = self.col.find(filter_)
+        # Sort by recent
+        cursor.sort("$natural", -1)  # type: ignore
+        # Slice files according to offset and max results
+        cursor.skip(offset)  # type: ignore
+        cursor.limit(max_results)  # type: ignore
+        # Get list of files
+        files = await cursor.to_list(length=max_results)
+
+        # Filter results to only include series
+        series_files = []
+        for file in files:
+            file_name = file.get("file_name", "")
+            caption = file.get("caption", "")
+            if check_if_series(file_name, caption):
+                series_files.append(file)
+
+        return series_files, next_offset, total_results
+
+
 
     async def get_file_details(self, file_id: str):
         return await self.col.find_one({"file_id": file_id})  # type: ignore
