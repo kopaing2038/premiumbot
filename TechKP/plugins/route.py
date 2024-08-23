@@ -36,22 +36,32 @@ async def miniapp_handler(request: web.Request):
 @routes.get(r"/search", allow_head=True)
 async def search_handler(request: web.Request):
     query = request.query.get('query', '')
-    if not query:
-        return web.json_response([])
-    
-    cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}})
-    results = await cursor.to_list(length=100)  # Adjust length as needed
+    page = int(request.query.get('page', 1))
+    limit = int(request.query.get('limit', 10))
+    skip = (page - 1) * limit
 
-    # Serialize the results
-    serialized_results = [
-        {
-            'file_id': doc.get('file_id', ''),
-            'file_name': doc.get('file_name', '')
-        }
-        for doc in results
-    ]
+    if not query:
+        return web.json_response({'items': [], 'hasPrev': False, 'hasNext': False})
     
-    return web.json_response(serialized_results)
+    total_count = await collection.count_documents({'file_name': {'$regex': query, '$options': 'i'}})
+    cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}}).skip(skip).limit(limit)
+    results = await cursor.to_list(length=limit)
+    
+    has_prev = page > 1
+    has_next = skip + limit < total_count
+
+    return web.json_response({
+        'items': [
+            {
+                'file_id': doc.get('file_id', ''),
+                'file_name': doc.get('file_name', '')
+            }
+            for doc in results
+        ],
+        'hasPrev': has_prev,
+        'hasNext': has_next
+    })
+
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
