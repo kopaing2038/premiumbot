@@ -61,19 +61,25 @@
             margin: 0 5px;
             font-size: 16px;
         }
+        .total-files {
+            margin: 20px 0;
+            font-size: 16px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Telegram Movie</h1>
-        <p>Premium Movie Search.</p>
+        <h1>Welcome to My Telegram App</h1>
+        <p>Premium Movie Search</p>
         <form id="search-form">
             <input type="text" id="search-query" placeholder="Search for movie name...">
             <input type="submit" value="Search" class="button">
         </form>
+        <div class="total-files" id="total-files">Total files: 0</div>
         <div id="results"></div>
         <div class="pagination" id="pagination-controls">
-            <button id="prev-page" disabled>Back</button>
+            <button id="prev-page" disabled>Previous</button>
             <span id="page-info">Page 1</span>
             <button id="next-page">Next</button>
         </div>
@@ -106,11 +112,13 @@
             const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${currentPage}&limit=${resultsPerPage}`);
             const data = await response.json();
             const resultsDiv = document.getElementById('results');
+            const totalFilesDiv = document.getElementById('total-files');
             resultsDiv.innerHTML = data.results.map(file => 
                 `<a href="https://telegram.me/DIANA_FILTERBOT?start=file_${file.file_id}" class="file-link">${file.file_name}</a>`
             ).join('');
 
-            // Update pagination controls
+            // Update total files and pagination controls
+            totalFilesDiv.innerText = `Total files: ${data.total}`;
             const paginationControls = document.getElementById('pagination-controls');
             paginationControls.style.display = data.results.length > 0 ? 'block' : 'none'; // Show pagination if there are results
             document.getElementById('page-info').innerText = `Page ${currentPage}`;
