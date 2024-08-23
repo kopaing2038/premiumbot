@@ -10,6 +10,16 @@ from KPBOT.util.render_template import render_page
 from TechKP.config.config import Config
 routes = web.RouteTableDef()
 
+
+from aiohttp import web
+import motor.motor_asyncio
+
+
+client = motor.motor_asyncio.AsyncIOMotorClient(Config.DATABASE_URI)
+db = client[Config.SESSION_NAME]
+collection = db[Config.COLLECTION_NAME]
+
+
 @routes.get("/", allow_head=True)
 async def root_route_handler(request):
     return web.json_response("BenFilterBot")
@@ -18,6 +28,16 @@ async def root_route_handler(request):
 async def miniapp_handler(request: web.Request):
     return web.Response(text=open('KPBOT/template/miniapp.html').read(), content_type='text/html')
 
+@routes.get(r"/search", allow_head=True)
+async def search_handler(request: web.Request):
+    query = request.query.get('query', '')
+    if not query:
+        return web.json_response([])
+    
+    cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}})
+    results = await cursor.to_list(length=100)  # Adjust length as needed
+    
+    return web.json_response(results)
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
