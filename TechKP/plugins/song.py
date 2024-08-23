@@ -10,6 +10,7 @@ async def pm_search(bot, message):
     content = message.text
     user = message.from_user.first_name
     user_id = message.from_user.id
+    mention = message.from_user.mention
     if content.startswith("/") or content.startswith("#"): return  # ignore commands and hashtags
     if Config.PM_SEARCH == True:
         await auto_filter(bot, message, pm_mode=True)
