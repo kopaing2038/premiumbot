@@ -1056,7 +1056,7 @@ async def request_series_cb_handler(bot: Client, query: types.CallbackQuery):
     Cache.BUTTONS2[key] = search
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(f"{search}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files, n_offset, total = await b_filter.get_series_search_results(f"{search}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
     
     files = [file for file in files if re.search(search, file['file_name'], re.IGNORECASE)]
     
@@ -1175,7 +1175,7 @@ async def sernext_search(client: Client, query: types.CallbackQuery):
     search = search.replace("_", " ")
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(f"{search}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files, n_offset, total = await b_filter.get_series_search_results(f"{search}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
     try:
         n_offset = int(n_offset)
     except:
@@ -1306,7 +1306,7 @@ async def seriesquality_search(client: Client, query: types.CallbackQuery):
     search = search.replace("_", " ")
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(
+    files, n_offset, total = await b_filter.get_series_search_results(
         f"{search} {qul}", offset=offset, filter=True, photo=settings['PHOTO_FILTER']
     )
     try:
@@ -1446,7 +1446,7 @@ async def seriesfilter_episodes_cb_handler(client: Client, query: types.Callback
     search = search.replace('_', ' ')
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(
+    files, n_offset, total = await b_filter.get_series_search_results(
         f"{search} {episode}", offset=original_offset, filter=True, photo=settings['PHOTO_FILTER']
     )
     if not files:
@@ -1583,9 +1583,9 @@ async def seriesse_ason_search(client: Client, query: types.CallbackQuery):
     search = search.replace("_", " ")
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(f"{search} {seas}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
-    files2, n_offset2, total2 = await b_filter.get_search_results(f"{search} {season}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
-    files3, n_offset3, total3 = await b_filter.get_search_results(f"{search} {seass}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files, n_offset, total = await b_filter.get_series_search_results(f"{search} {seas}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files2, n_offset2, total2 = await b_filter.get_series_search_results(f"{search} {season}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files3, n_offset3, total3 = await b_filter.get_series_search_results(f"{search} {seass}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
     total += total2
     total += total3
     try:
@@ -1721,7 +1721,7 @@ async def seriesyear_search(client: Client, query: types.CallbackQuery):
     search = search.replace("_", " ")
    
     settings = await config_db.get_settings(f"SETTINGS_{query.message.chat.id}")
-    files, n_offset, total = await b_filter.get_search_results(f"{search} {year}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
+    files, n_offset, total = await b_filter.get_series_search_results(f"{search} {year}", offset=offset, filter=True, photo=settings['PHOTO_FILTER'])
     try:
         n_offset = int(n_offset)
     except:
