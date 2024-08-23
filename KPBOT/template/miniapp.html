@@ -1,58 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App Example</title>
+    <title>My Telegram Mini App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+            text-align: center;
+            margin: 20px;
         }
         .container {
-            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
-        h1 {
-            color: #0078ff;
+        .button {
+            background-color: #0088cc;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
         }
-        p {
-            font-size: 18px;
+        .button:hover {
+            background-color: #005a8e;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to My Telegram Mini App</h1>
-        <p>This is a simple example of a Telegram Mini App built with HTML.</p>
-        <button onclick="sendMessage()">Send Message to Telegram</button>
+        <p>This is a sample mini app using HTML.</p>
+        <a href="https://example.com" class="button">Visit Our Website</a>
     </div>
-    <script>
-        function sendMessage() {
-            // Assuming you want to send a message via the Telegram Bot API
-            const chatId = '<CHAT_ID>'; // Replace with the actual chat ID
-            const message = 'Hello from my Telegram Mini App!';
-
-            fetch(`https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`, {
-                method: 'POST',
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    alert('Message sent!');
-                } else {
-                    alert('Failed to send message.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error sending message.');
-            });
-        }
-    </script>
 </body>
 </html>
