@@ -27,13 +27,33 @@
         .button:hover {
             background-color: #005a8e;
         }
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to My Telegram Mini App</h1>
         <p>This is a sample mini app using HTML.</p>
-        <a href="https://example.com" class="button">Visit Our Website</a>
+        <form id="search-form">
+            <input type="text" id="search-query" placeholder="Search for files...">
+            <input type="submit" value="Search" class="button">
+        </form>
+        <div id="results"></div>
     </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const query = document.getElementById('search-query').value;
+            const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
+            const results = await response.json();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = results.map(file => `<p>${file.file_name}</p>`).join('');
+        });
+    </script>
 </body>
 </html>
