@@ -42,20 +42,23 @@
             text-decoration: underline;
         }
         .pagination {
-            margin-top: 20px;
+            margin: 20px 0;
         }
         .pagination button {
             background-color: #0088cc;
             color: #fff;
+            padding: 10px 20px;
             border: none;
-            padding: 10px;
             border-radius: 5px;
             cursor: pointer;
             margin: 0 5px;
         }
-        .pagination button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .pagination button:hover {
+            background-color: #005a8e;
+        }
+        .pagination span {
+            margin: 0 5px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -68,62 +71,49 @@
             <input type="submit" value="Search" class="button">
         </form>
         <div id="results"></div>
-        <div id="pagination" class="pagination">
-            <button id="prev-button" disabled>Previous</button>
-            <button id="next-button">Next</button>
+        <div class="pagination">
+            <button id="prev-page" disabled>Previous</button>
+            <span id="page-info">Page 1</span>
+            <button id="next-page">Next</button>
         </div>
     </div>
 
     <script>
         let currentPage = 1;
-        const resultsPerPage = 10;
-
-        async function fetchResults(query, page) {
-            const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${page}&limit=${resultsPerPage}`);
-            const data = await response.json();
-            return data;
-        }
-
-        function updateResults(results) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = results.map(file => 
-                `<a href="https://telegram.me/DIANA_FILTERBOT?start=${file.file_id}" class="file-link">${file.file_name}</a>`
-            ).join('');
-        }
-
-        function updatePagination(hasPrev, hasNext) {
-            document.getElementById('prev-button').disabled = !hasPrev;
-            document.getElementById('next-button').disabled = !hasNext;
-        }
+        const resultsPerPage = 100; // Limit to 100 items per page
 
         document.getElementById('search-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const query = document.getElementById('search-query').value;
-            currentPage = 1; // Reset to the first page
-            const results = await fetchResults(query, currentPage);
-            updateResults(results.items);
-            updatePagination(results.hasPrev, results.hasNext);
+            currentPage = 1; // Reset to first page on new search
+            await fetchResults();
         });
 
-        document.getElementById('prev-button').addEventListener('click', async function() {
+        document.getElementById('prev-page').addEventListener('click', async function() {
             if (currentPage > 1) {
                 currentPage--;
-                const query = document.getElementById('search-query').value;
-                const results = await fetchResults(query, currentPage);
-                updateResults(results.items);
-                updatePagination(results.hasPrev, results.hasNext);
+                await fetchResults();
             }
         });
 
-        document.getElementById('next-button').addEventListener('click', async function() {
-            const query = document.getElementById('search-query').value;
-            const results = await fetchResults(query, currentPage + 1);
-            if (results.items.length > 0) {
-                currentPage++;
-                updateResults(results.items);
-                updatePagination(results.hasPrev, results.hasNext);
-            }
+        document.getElementById('next-page').addEventListener('click', async function() {
+            currentPage++;
+            await fetchResults();
         });
+
+        async function fetchResults() {
+            const query = document.getElementById('search-query').value;
+            const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${currentPage}&limit=${resultsPerPage}`);
+            const data = await response.json();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = data.results.map(file => 
+                `<a href="https://telegram.me/DIANA_FILTERBOT?start=file_${file.file_id}" class="file-link">${file.file_name}</a>`
+            ).join('');
+
+            // Update pagination controls
+            document.getElementById('page-info').innerText = `Page ${currentPage}`;
+            document.getElementById('prev-page').disabled = currentPage <= 1;
+            document.getElementById('next-page').disabled = data.results.length < resultsPerPage;
+        }
     </script>
 
     <footer>
