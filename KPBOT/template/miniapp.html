@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Telegram Premium</title>
+    <title>My Telegram Mini App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,29 +41,88 @@
         .file-link:hover {
             text-decoration: underline;
         }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            background-color: #0088cc;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to My Premium App</h1>
-        <p>Premium Movie & Series Search</p>
+        <h1>Welcome to My Telegram Mini App</h1>
+        <p>This is a sample mini app using HTML.</p>
         <form id="search-form">
-            <input type="text" id="search-query" placeholder="Search for movie name...">
+            <input type="text" id="search-query" placeholder="Search for files...">
             <input type="submit" value="Search" class="button">
         </form>
         <div id="results"></div>
+        <div id="pagination" class="pagination">
+            <button id="prev-button" disabled>Previous</button>
+            <button id="next-button">Next</button>
+        </div>
     </div>
 
     <script>
+        let currentPage = 1;
+        const resultsPerPage = 10;
+
+        async function fetchResults(query, page) {
+            const response = await fetch(`/search?query=${encodeURIComponent(query)}&page=${page}&limit=${resultsPerPage}`);
+            const data = await response.json();
+            return data;
+        }
+
+        function updateResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = results.map(file => 
+                `<a href="https://telegram.me/DIANA_FILTERBOT?start=${file.file_id}" class="file-link">${file.file_name}</a>`
+            ).join('');
+        }
+
+        function updatePagination(hasPrev, hasNext) {
+            document.getElementById('prev-button').disabled = !hasPrev;
+            document.getElementById('next-button').disabled = !hasNext;
+        }
+
         document.getElementById('search-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const query = document.getElementById('search-query').value;
-            const response = await fetch(`/search?query=${encodeURIComponent(query)}`);
-            const results = await response.json();
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = results.map(file => 
-                `<a href="https://telegram.me/DIANA_FILTERBOT?start=file_${file.file_id}" class="file-link">${file.file_name}</a>`
-            ).join('');
+            currentPage = 1; // Reset to the first page
+            const results = await fetchResults(query, currentPage);
+            updateResults(results.items);
+            updatePagination(results.hasPrev, results.hasNext);
+        });
+
+        document.getElementById('prev-button').addEventListener('click', async function() {
+            if (currentPage > 1) {
+                currentPage--;
+                const query = document.getElementById('search-query').value;
+                const results = await fetchResults(query, currentPage);
+                updateResults(results.items);
+                updatePagination(results.hasPrev, results.hasNext);
+            }
+        });
+
+        document.getElementById('next-button').addEventListener('click', async function() {
+            const query = document.getElementById('search-query').value;
+            const results = await fetchResults(query, currentPage + 1);
+            if (results.items.length > 0) {
+                currentPage++;
+                updateResults(results.items);
+                updatePagination(results.hasPrev, results.hasNext);
+            }
         });
     </script>
 
@@ -79,10 +138,9 @@
                 var theDate = new Date(); 
                 document.write(theDate.getFullYear());
             </script> Copyright:
-            <a class="bg-clip-text text-[16px] text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold tracking-wide px-1" href="https://telegram.me/KOPAINGLAY15">TECH KP</a>
+            <a class="bg-clip-text text-[16px] text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold tracking-wide px-1" href="https://telegram.me/MKACHANNEL1">Tech KP</a>
             All rights reserved
         </div>
     </footer>
 </body>
 </html>
-
