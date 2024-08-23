@@ -29,7 +29,7 @@ def serialize_document(doc):
 async def root_route_handler(request):
     return web.json_response("BenFilterBot")
 
-@routes.get(r"/miniapp", allow_head=True)
+@routes.get(r"/premiumapp", allow_head=True)
 async def miniapp_handler(request: web.Request):
     return web.Response(text=open('KPBOT/template/miniapp.html').read(), content_type='text/html')
 
