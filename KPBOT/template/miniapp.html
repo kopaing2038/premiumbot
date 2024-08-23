@@ -71,13 +71,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to My Telegram App</h1>
+        <h1>Welcome to My Telegram  Premium Movie & Series App</h1>
         <p>This is premium user using mini app.</p>
         <form id="search-form">
             <input type="text" id="search-query" placeholder="Search for movie name...">
             <input type="submit" value="Search" class="button">
         </form>
-        <div class="total-files" id="total-files">Total files: 0</div>
+        <div class="total-files" id="total-files">Total Files: 0</div>
         <div id="results"></div>
         <div class="pagination" id="pagination-controls">
             <button id="prev-page" disabled>Previous</button>
@@ -121,7 +121,7 @@
             // Show total files and update pagination controls
             if (data.results.length > 0) {
                 totalFilesDiv.style.display = 'block';
-                totalFilesDiv.innerText = `Total files: ${data.total}`;
+                totalFilesDiv.innerText = `Total Files: ${data.total}`;
                 const paginationControls = document.getElementById('pagination-controls');
                 paginationControls.style.display = 'block';
                 document.getElementById('page-info').innerText = `Page ${currentPage}`;
