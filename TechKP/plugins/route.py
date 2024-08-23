@@ -43,7 +43,13 @@ async def search_handler(request: web.Request):
     results = await cursor.to_list(length=100)  # Adjust length as needed
 
     # Serialize the results
-    serialized_results = [serialize_document(doc) for doc in results]
+    serialized_results = [
+        {
+            'file_id': doc.get('file_id', ''),
+            'file_name': doc.get('file_name', '')
+        }
+        for doc in results
+    ]
     
     return web.json_response(serialized_results)
 
