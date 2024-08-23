@@ -43,8 +43,17 @@ async def search_handler(request: web.Request):
     if not query:
         return web.json_response({'results': [], 'total': 0})
     
-    total_count = await collection.count_documents({'file_name': {'$regex': query, '$options': 'i'}})
-    cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}}).skip(skip).limit(limit)
+    # Adjust query to exclude files with type 'photo'
+    total_count = await collection.count_documents({
+        'file_name': {'$regex': query, '$options': 'i'},
+        'file_type': {'$ne': 'photo'}
+    })
+    
+    cursor = collection.find({
+        'file_name': {'$regex': query, '$options': 'i'},
+        'file_type': {'$ne': 'photo'}
+    }).skip(skip).limit(limit)
+    
     results = await cursor.to_list(length=limit)
     
     serialized_results = [
@@ -56,6 +65,7 @@ async def search_handler(request: web.Request):
     ]
     
     return web.json_response({'results': serialized_results, 'total': total_count})
+
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
