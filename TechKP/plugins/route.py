@@ -41,8 +41,9 @@ async def search_handler(request: web.Request):
     skip = (page - 1) * limit
     
     if not query:
-        return web.json_response({'results': []})
+        return web.json_response({'results': [], 'total': 0})
     
+    total_count = await collection.count_documents({'file_name': {'$regex': query, '$options': 'i'}})
     cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}}).skip(skip).limit(limit)
     results = await cursor.to_list(length=limit)
     
@@ -54,7 +55,7 @@ async def search_handler(request: web.Request):
         for doc in results
     ]
     
-    return web.json_response({'results': serialized_results})
+    return web.json_response({'results': serialized_results, 'total': total_count})
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
