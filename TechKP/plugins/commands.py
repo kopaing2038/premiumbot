@@ -235,6 +235,8 @@ async def start_handler(bot: Client, msg: types.Message):
             types.InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
             types.InlineKeyboardButton('🎗️ ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ', callback_data='premium'),
         ],[
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
+        ],[
             types.InlineKeyboardButton('Iɴʟɪɴᴇ Sᴇᴀʀᴄʜ ☌', switch_inline_query_current_chat=''),
             types.InlineKeyboardButton('✇ Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs ✇', callback_data='popularmovies')
         ],[
@@ -305,6 +307,8 @@ async def start_handler(bot: Client, msg: types.Message):
                 types.InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=Config.GROUPS_LINK),
                 types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
             ],[
+                types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
+            ],[
                 types.InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="t.me/KOPAINGLAY15")
             ]]
             msgs = await bot.send_cached_media(
@@ -351,8 +355,10 @@ async def start_handler(bot: Client, msg: types.Message):
 
 
                 button = [[
-                   types.InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=Config.GROUPS_LINK),
-                   types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
+                    types.InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=Config.GROUPS_LINK),
+                    types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
+                ],[
+                    types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
                 ],[
                     types.InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="t.me/KOPAINGLAY15")
                 ],[
@@ -418,6 +424,8 @@ async def start_handler(bot: Client, msg: types.Message):
         types.InlineKeyboardButton('Sᴜᴘᴘᴏʀᴛ Gʀᴏᴜᴘ', url=Config.GROUPS_LINK),
         types.InlineKeyboardButton('Uᴘᴅᴀᴛᴇs Cʜᴀɴɴᴇʟ', url=Config.CHANNEL_LINK)
     ],[
+        types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
+    ],[
         types.InlineKeyboardButton("𝗕𝗢𝗧 𝗢𝗪𝗡𝗘𝗥", url="https://t.me/KOPAINGLAY15")
     ],[
         types.InlineKeyboardButton('🚀 Fast Download / Watch Online🖥️', callback_data=f"generate_stream_link:{files['file_id']}")
@@ -464,6 +472,8 @@ async def home_handler(bot: Client, query: types.CallbackQuery):
     ],[
         types.InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
         types.InlineKeyboardButton('🎗️ ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ', callback_data='premium'),
+    ],[
+        types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
     ],[
         types.InlineKeyboardButton('Iɴʟɪɴᴇ Sᴇᴀʀᴄʜ ☌', switch_inline_query_current_chat=''),
         types.InlineKeyboardButton('✇ Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs ✇', callback_data='popularmovies')
