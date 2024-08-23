@@ -33,13 +33,19 @@
             margin-bottom: 10px;
         }
         .file-link {
-            display: block;
+            display: flex;
+            align-items: center;
             margin: 10px 0;
             text-decoration: none;
             color: #0088cc;
         }
         .file-link:hover {
             text-decoration: underline;
+        }
+        .file-icon {
+            width: 50px; /* Adjust size as needed */
+            height: 75px; /* Adjust size as needed */
+            margin-right: 10px;
         }
         .pagination {
             margin: 20px 0;
@@ -71,13 +77,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to My Telegram  Movie & Series App</h1>
-        <p>This is premium user using mini app.</p>
+        <h1>Welcome to My Telegram Mini App</h1>
+        <p>This is a sample mini app using HTML.</p>
         <form id="search-form">
-            <input type="text" id="search-query" placeholder="Search for movie name...">
+            <input type="text" id="search-query" placeholder="Search for files...">
             <input type="submit" value="Search" class="button">
         </form>
-        <div class="total-files" id="total-files">Total Files: 0</div>
+        <div class="total-files" id="total-files">Total files: 0</div>
         <div id="results"></div>
         <div class="pagination" id="pagination-controls">
             <button id="prev-page" disabled>Previous</button>
@@ -115,13 +121,16 @@
             const resultsDiv = document.getElementById('results');
             const totalFilesDiv = document.getElementById('total-files');
             resultsDiv.innerHTML = data.results.map(file => 
-                `<a href="https://telegram.me/DIANA_FILTERBOT?start=file_${file.file_id}" class="file-link">${file.file_name}</a>`
+                `<a href="https://telegram.me/DIANA_FILTERBOT?start=${file.file_id}" class="file-link">
+                    <img src="${file.poster_url}" alt="${file.file_name}" class="file-icon">
+                    ${file.file_name}
+                </a>`
             ).join('');
 
             // Show total files and update pagination controls
             if (data.results.length > 0) {
                 totalFilesDiv.style.display = 'block';
-                totalFilesDiv.innerText = `Total Files: ${data.total}`;
+                totalFilesDiv.innerText = `Total files: ${data.total}`;
                 const paginationControls = document.getElementById('pagination-controls');
                 paginationControls.style.display = 'block';
                 document.getElementById('page-info').innerText = `Page ${currentPage}`;
@@ -146,7 +155,7 @@
                 var theDate = new Date(); 
                 document.write(theDate.getFullYear());
             </script> Copyright:
-            <a class="bg-clip-text text-[16px] text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold tracking-wide px-1" href="https://telegram.me/KOPAINGLAY15">TECH KP</a>
+            <a class="bg-clip-text text-[16px] text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-bold tracking-wide px-1" href="https://telegram.me/MKACHANNEL1">Tech KP</a>
             All rights reserved
         </div>
     </footer>
