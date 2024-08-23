@@ -60,7 +60,6 @@ async def search_handler(request: web.Request):
         {
             'file_id': doc.get('file_id', ''),
             'file_name': doc.get('file_name', ''),
-            'poster_url': doc.get('poster_url', '')  # Include poster URL
         }
         for doc in results
     ]
