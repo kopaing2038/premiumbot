@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Telegram Mini App</title>
+    <title>My Telegram Premium App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,6 +43,7 @@
         }
         .pagination {
             margin: 20px 0;
+            display: none; /* Hide pagination controls initially */
         }
         .pagination button {
             background-color: #0088cc;
@@ -64,14 +65,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to My Telegram Mini App</h1>
-        <p>This is a sample mini app using HTML.</p>
+        <h1>Welcome to My Telegram Premium</h1>
+        <p>Premium User Only Search.</p>
         <form id="search-form">
             <input type="text" id="search-query" placeholder="Search for files...">
             <input type="submit" value="Search" class="button">
         </form>
         <div id="results"></div>
-        <div class="pagination">
+        <div class="pagination" id="pagination-controls">
             <button id="prev-page" disabled>Previous</button>
             <span id="page-info">Page 1</span>
             <button id="next-page">Next</button>
@@ -110,6 +111,8 @@
             ).join('');
 
             // Update pagination controls
+            const paginationControls = document.getElementById('pagination-controls');
+            paginationControls.style.display = data.results.length > 0 ? 'block' : 'none'; // Show pagination if there are results
             document.getElementById('page-info').innerText = `Page ${currentPage}`;
             document.getElementById('prev-page').disabled = currentPage <= 1;
             document.getElementById('next-page').disabled = data.results.length < resultsPerPage;
