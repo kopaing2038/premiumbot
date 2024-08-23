@@ -62,7 +62,7 @@
             const results = await response.json();
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = results.map(file => 
-                `<a href="https://telegram.me/DIANA_FILTERBOT?start=${file.file_id}" class="file-link">${file.file_name}</a>`
+                `<a href="https://telegram.me/DIANA_FILTERBOT?start=file_${file.file_id}" class="file-link">${file.file_name}</a>`
             ).join('');
         });
     </script>
