@@ -14,6 +14,11 @@ routes = web.RouteTableDef()
 async def root_route_handler(request):
     return web.json_response("BenFilterBot")
 
+@routes.get(r"/miniapp", allow_head=True)
+async def miniapp_handler(request: web.Request):
+    return web.Response(text=open('KPBOT/template/miniapp.html').read(), content_type='text/html')
+
+
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
     try:
