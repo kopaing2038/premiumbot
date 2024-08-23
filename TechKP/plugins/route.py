@@ -59,13 +59,13 @@ async def search_handler(request: web.Request):
     serialized_results = [
         {
             'file_id': doc.get('file_id', ''),
-            'file_name': doc.get('file_name', '')
+            'file_name': doc.get('file_name', ''),
+            'poster_url': doc.get('poster_url', '')  # Include poster URL
         }
         for doc in results
     ]
     
     return web.json_response({'results': serialized_results, 'total': total_count})
-
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
