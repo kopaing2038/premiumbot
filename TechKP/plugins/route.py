@@ -19,6 +19,11 @@ client = motor.motor_asyncio.AsyncIOMotorClient(Config.DATABASE_URI)
 db = client[Config.SESSION_NAME]
 collection = db[Config.COLLECTION_NAME]
 
+def serialize_document(doc):
+    """Convert MongoDB document to a serializable format."""
+    doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+    return doc
+
 
 @routes.get("/", allow_head=True)
 async def root_route_handler(request):
@@ -36,8 +41,11 @@ async def search_handler(request: web.Request):
     
     cursor = collection.find({'file_name': {'$regex': query, '$options': 'i'}})
     results = await cursor.to_list(length=100)  # Adjust length as needed
+
+    # Serialize the results
+    serialized_results = [serialize_document(doc) for doc in results]
     
-    return web.json_response(results)
+    return web.json_response(serialized_results)
 
 @routes.get(r"/watch/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
