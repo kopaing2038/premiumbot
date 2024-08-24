@@ -141,7 +141,7 @@ This Movie Files/Videos will be deleted in <b><u>5 mins</u></b> 🫥 <i></b>(Due
     CHANNEL_LINK = "https://t.me/addlist/FCNUqz3nfyM2MzBk"
     USERNAME = environ.get('USERNAME', "https://telegram.me/KOPAINGLAY15")
 
-
+    MINI_APP_URL = "https://kp.mkschannel.org/premiumapp"
     #stream 
     PING_INTERVAL = int(environ.get("PING_INTERVAL", "1200"))  # 20 minutes
     URL = environ.get("URL", "http://68.183.15.99:8000/")
