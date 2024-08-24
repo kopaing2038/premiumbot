@@ -12,6 +12,8 @@ from pyrogram.errors.exceptions.bad_request_400 import QueryIdInvalid
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultCachedDocument, InlineQuery
 from TechKP.database.autofilter import a_filter, b_filter
 from TechKP.database.db import db
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
+
 
 @Client.on_inline_query()
 async def answer(bot, query):
@@ -93,6 +95,6 @@ async def answer(bot, query):
 def get_reply_markup(query):
     buttons = [
         [InlineKeyboardButton('Search again', switch_inline_query_current_chat=query)],
-        [InlineKeyboardButton('Search in channel', url='https://t.me/+FKSn4xM2fExmMGVk')]
+        [InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))   
     ]
     return InlineKeyboardMarkup(buttons)
