@@ -1,6 +1,7 @@
 
 import logging, asyncio, time, pytz, re, os, math, json, random, base64, sys
 from pyrogram import errors, filters, types, Client, enums
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
 from TechKP.config.Script import script
 from ..config import Config
 from ..database import a_filter, b_filter, db1, db2, usersDB
@@ -235,7 +236,7 @@ async def start_handler(bot: Client, msg: types.Message):
             types.InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
             types.InlineKeyboardButton('🎗️ ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ', callback_data='premium'),
         ],[
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")       
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))       
         ],[
             types.InlineKeyboardButton('Iɴʟɪɴᴇ Sᴇᴀʀᴄʜ ☌', switch_inline_query_current_chat=''),
             types.InlineKeyboardButton('✇ Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs ✇', callback_data='popularmovies')
