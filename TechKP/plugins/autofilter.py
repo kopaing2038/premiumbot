@@ -3,6 +3,7 @@ import re
 import logging, asyncio, time, pytz, re, os
 from imdb import Cinemagoer
 from pyrogram import Client, enums, errors, filters, types
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
 import traceback
 from fuzzywuzzy import process
 from ..config import Config
@@ -212,7 +213,7 @@ async def auto_filter(bot: Client, msg: types.Message, spoll=False, pm_mode = Fa
         btn.insert(0, 
             [
                 types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-                types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")                      
+                types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))         
             ]
         )  
     else:
@@ -428,7 +429,7 @@ async def next_page(bot: Client, query: types.CallbackQuery):
     btn.insert(0, 
         [
             types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")                     
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))           
         ]
     )
     if not settings["IS_BUTTON"]:
@@ -561,7 +562,7 @@ async def quality_search(client: Client, query: types.CallbackQuery):
     btn.insert(0, 
         [
             types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")                     
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))            
         ]
     )
     btn.append([
@@ -703,7 +704,7 @@ async def filter_episodes_cb_handler(client: Client, query: types.CallbackQuery)
     btn.insert(0, 
         [
             types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")               
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))               
         ]
     )
     btn.append([types.InlineKeyboardButton(text="⪻ Back to Main Page", callback_data=f"next_{req}_{key}_{0}")])
@@ -833,7 +834,7 @@ async def season_search(client: Client, query: types.CallbackQuery):
     btn.insert(0, 
         [
             types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")             
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))    
         ]
     )
     if n_offset== '':
@@ -983,7 +984,7 @@ async def year_search(client: Client, query: types.CallbackQuery):
     btn.insert(0, 
         [
             types.InlineKeyboardButton("Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs", callback_data=f"popmovie#{key}"),
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")           
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))       
         ]
     )
     btn.append([
