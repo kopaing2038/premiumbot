@@ -1,6 +1,7 @@
 import logging, asyncio, time, pytz, re, os, math, random
 import json
 import pyrogram
+
 from pyrogram.handlers import CallbackQueryHandler
 from pyrogram import errors, filters, types, Client, enums
 from ..database import configDB as config_db
@@ -313,7 +314,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             types.InlineKeyboardButton('⚙ ꜰᴇᴀᴛᴜʀᴇs', callback_data='features'),
             types.InlineKeyboardButton('🎗️ ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ', callback_data='premium'),
         ],[
-            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", url=f"{Config.URL}premiumapp")     
+            types.InlineKeyboardButton("Mɪɴɪ Aᴘᴘ Sᴇᴀʀᴄʜ", web_app=WebAppInfo(url=Config.MINI_APP_URL))      
         ],[
             types.InlineKeyboardButton('Iɴʟɪɴᴇ Sᴇᴀʀᴄʜ ☌', switch_inline_query_current_chat=''),
             types.InlineKeyboardButton('✇ Pᴏᴘᴜʟᴀʀ Mᴏᴠɪᴇs ✇', callback_data='popularmovies')
