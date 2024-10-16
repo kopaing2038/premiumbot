@@ -3,19 +3,13 @@ import datetime
 import time
 from vip.database.db import db
 from vip.info import ADMINS
-from vip.utils import users_broadcast, get_readable_time
+from vip.utils import users_broadcast, get_readable_time, temp
 import asyncio
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup 
 
 lock = asyncio.Lock()
 
-class temp(object):
-    ME = None
-    CURRENT=int(os.environ.get("SKIP", 2))
-    CANCEL = False
-    USERS_CANCEL = False
-    GROUPS_CANCEL = False    
-    CHAT = {}
+
 
 
 @Client.on_callback_query(filters.regex(r'^broadcast_cancel'))
