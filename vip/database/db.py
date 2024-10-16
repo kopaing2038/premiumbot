@@ -12,6 +12,13 @@ class Database:
     def __init__(self):
         self.col = mydb.users
 
+    default_verify = {
+        'is_verified': False,
+        'verified_time': 0,
+        'verify_token': "",
+        'link': "",
+        'expire_time': 0
+    }
     def new_user(self, id, name):
         return dict(
             id = id,
