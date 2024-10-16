@@ -2,14 +2,7 @@ import logging, asyncio, time, pytz, re, os, math, json, random, base64, sys, re
 from pyrogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
 from pyrogram import errors, filters, types, Client
 from motor.motor_asyncio import AsyncIOMotorClient
-
-DATABASE_URI = os.environ.get('DATABASE_URI', "mongodb+srv://premiumbot:premiumbot@cluster0.5siafyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-LOG_CHANNEL = int(os.environ.get('LOG_CHANNEL', '-1001254905376'))
-START_IMG = os.environ.get('START_IMG', 'https://l.arzfun.com/30hBn')
-NEW_USER_TXT = """<b>#New_User 
-
-≈ ɪᴅ:- <code>{}</code>
-≈ ɴᴀᴍᴇ:- {}</b>"""
+from vip.info import *
 
 
 client = AsyncIOMotorClient(DATABASE_URI)
