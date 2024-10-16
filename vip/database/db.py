@@ -2,9 +2,11 @@ import logging, asyncio, time, pytz, re, os, math, json, random, base64, sys, re
 from pyrogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto, ChatPermissions, WebAppInfo
 from pyrogram import errors, filters, types, Client
 from motor.motor_asyncio import AsyncIOMotorClient
+from vip.info import *
+
 
 client = AsyncIOMotorClient(DATABASE_URI)
-mydb = client["VIPREGISTERBOT"]
+mydb = client[DATABASE_NAME]
 
 class Database:
     def __init__(self):
