@@ -5,6 +5,18 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from vip.info import *
 from vip.database.db import db
 
+
+@Client.on_message(filters.command('stats'))
+async def stats(bot, message):
+    user_id = message.from_user.id
+    if user_id not in ADMINS:
+        await message.delete()
+        return
+    users = await db.total_users_count()
+    await message.reply_text(STATUS_TXT.format(users))    
+    
+
+
 @Client.on_message(filters.command("start") & filters.incoming)
 async def key_start(client, message):
     user = message.from_user.mention
