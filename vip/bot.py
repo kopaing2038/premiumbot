@@ -24,7 +24,6 @@ class Bot(Client):
         await super().start()
         me = await self.get_me()
         self.username = '@' + me.username
-        self.loop.create_task(check_expired_premium(self))
         print(f"{me.first_name} is started now ❤️")
         tz = pytz.timezone('Asia/Yangon')
 
