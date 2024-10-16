@@ -49,7 +49,7 @@ async def start():
    # await runner.setup()
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
-    await VIP.start()
+    #await VIP.start()
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
