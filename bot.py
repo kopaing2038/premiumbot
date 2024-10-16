@@ -15,6 +15,7 @@ from TechKP.utils.logger import LOGGER
 from TechKP.plugins import web_server
 from aiohttp import web
 from KPBOT.util.keepalive import ping_server
+from vip.bot import VIP
 
 TechKPBot.start()
 loop = asyncio.get_event_loop()
@@ -31,7 +32,7 @@ async def start():
     TechKPBot.loop.create_task(check_pending(TechKPBot))
     LOGGER(__name__).info(f"Banned Users list updated {Cache.BANNED}")
     LOGGER(__name__).info("Listening for updates from API..")
-    
+
     me = bot_info
     Cache.ME = me.id
     Cache.BOT = TechKPBot
@@ -48,7 +49,7 @@ async def start():
    # await runner.setup()
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
-    
+    await VIP.start()
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
