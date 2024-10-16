@@ -37,7 +37,7 @@ async def users_broadcast(bot, message):
     done = 0
     failed = 0
     success = 0
-
+    time_taken = get_readable_time(time.time()-start_time)
     async with lock:
         async for user in users:
             time_taken = get_readable_time(time.time()-start_time)
@@ -56,5 +56,5 @@ async def users_broadcast(bot, message):
                     InlineKeyboardButton('CANCEL', callback_data='broadcast_cancel#users')
                 ]]
                 await b_sts.edit(f"Users broadcast in progress...\n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>", reply_markup=InlineKeyboardMarkup(btn))
-        await b_sts.edit(f"Users broadcast completed.\nCompleted in {time_taken}\n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>")
+        await b_sts.edit(f"Users broadcast completed.\nCompleted in \n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>")
 
