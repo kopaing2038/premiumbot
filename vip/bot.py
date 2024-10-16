@@ -35,7 +35,6 @@ class Bot(Client):
         seconds = int(datetime.timedelta(seconds=tt).seconds)
         for admin in ADMINS:
             await self.send_message(chat_id=admin, text=f"<b>✅ ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ\n🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{seconds} sᴇᴄᴏɴᴅs</code></b>")
-        await periodic_feed_update()
 
 
     async def stop(self, *args):
