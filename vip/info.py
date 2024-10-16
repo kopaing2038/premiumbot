@@ -24,6 +24,8 @@ START_IMG = os.environ.get('START_IMG', 'https://l.arzfun.com/30hBn')
 
 
 
+STATUS_TXT = """
+👤 Total Users: <code>{}</code>"""
 
 NEW_USER_TXT = """<b>#New_User 
 
