@@ -12,7 +12,7 @@ async def key_start(client, message):
     # Check if user exists, if not, add to the database
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id, message.from_user.first_name)
-        await client.send_message(LOG_CHANNEL, NEW_USER_TXT.format(message.from_user.id, user))
+        #await client.send_message(LOG_CHANNEL, NEW_USER_TXT.format(message.from_user.id, user))
         
     # Create the custom keyboard
     keyboard = ReplyKeyboardMarkup(
