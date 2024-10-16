@@ -18,30 +18,22 @@ class temp(object):
     GROUPS_CANCEL = False    
     CHAT = {}
 
-async def users_broadcast(user_id, message, is_pin):
+async def broadcast_messages(user_id, message, pin):
     try:
-        m=await message.copy(chat_id=user_id)
-        if is_pin:
+        m = await message.copy(chat_id=user_id)
+        if pin:
             await m.pin(both_sides=True)
-        return True, "Success"
+        return "Success"
     except FloodWait as e:
-        await asyncio.sleep(e.x)
-        return await users_broadcast(user_id, message)
-    except InputUserDeactivated:
-        logging.info(f"{user_id}-Removed from Database, since deleted account.")
-        return False, "Deleted"
-    except UserIsBlocked:
-        logging.info(f"{user_id} -Blocked the bot.")
-        return False, "Blocked"
-    except PeerIdInvalid:
-        logging.info(f"{user_id} - PeerIdInvalid")
-        return False, "Error"
+        await asyncio.sleep(e.value)
+        return await broadcast_messages(user_id, message, pin)
     except Exception as e:
-        return False, "Error"
+        #await db.delete_user(int(user_id))
+        return "Error"
 
 
 def get_readable_time(seconds):
-    periods = [('days', 86400), ('hour', 3600), ('min', 60), ('sec', 1)]
+    periods = [('d', 86400), ('h', 3600), ('m', 60), ('s', 1)]
     result = ''
     for period_name, period_seconds in periods:
         if seconds >= period_seconds:
