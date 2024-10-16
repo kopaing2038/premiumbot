@@ -7,8 +7,6 @@ from vip.info import ADMINS
 import asyncio
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup 
 from vip.utils import broadcast_messages, temp, get_readable_time
-import asyncio
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 lock = asyncio.Lock()
 
@@ -23,22 +21,24 @@ async def broadcast_cancel(bot, query):
 async def users_broadcast(bot, message):
     if lock.locked():
         return await message.reply('Currently broadcast processing, Wait for complete.')
-    if message.command[0] == 'pin_broadcast':
-        pin = True
-    else:
-        pin = False
+    
+    pin = message.command[0] == 'pin_broadcast'
     users = await db.get_all_users()
     b_msg = message.reply_to_message
     b_sts = await message.reply_text(text='Broadcasting your users messages...')
+    
     start_time = time.time()
     total_users = await db.total_users_count()
     done = 0
     failed = 0
     success = 0
 
+    # Assign time_taken before the loop to avoid UnboundLocalError
+    time_taken = get_readable_time(time.time() - start_time)
+
     async with lock:
         async for user in users:
-            time_taken = get_readable_time(time.time()-start_time)
+            time_taken = get_readable_time(time.time() - start_time)
             if temp.USERS_CANCEL:
                 temp.USERS_CANCEL = False
                 await b_sts.edit(f"Users broadcast Cancelled!\nCompleted in {time_taken}\n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>")
@@ -54,6 +54,6 @@ async def users_broadcast(bot, message):
                     InlineKeyboardButton('CANCEL', callback_data='broadcast_cancel#users')
                 ]]
                 await b_sts.edit(f"Users broadcast in progress...\n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>", reply_markup=InlineKeyboardMarkup(btn))
+        
+        # Update final message after the loop
         await b_sts.edit(f"Users broadcast completed.\nCompleted in {time_taken}\n\nTotal Users: <code>{total_users}</code>\nCompleted: <code>{done} / {total_users}</code>\nSuccess: <code>{success}</code>")
-
-
