@@ -225,11 +225,14 @@ Sitt Paing Oo
 
 ADMIN ACC @KOPAINGLAY15
 
-ᴄʟɪᴄᴋ ᴛᴏ ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴀᴄᴛɪᴠᴇ ᴘʟᴀɴ /myplan
+Premium Bot 
+@DIANA_FILTERBOT
 
-💢 ᴍᴜsᴛ sᴇɴᴅ sᴄʀᴇᴇɴsʜᴏᴛ ᴀғᴛᴇʀ ᴘᴀʏᴍᴇɴᴛ
+Premium Plan ကြည့်ရန်
+https://telegram.me/DIANA_FILTERBOT?start=premium
 
-‼️ ᴀғᴛᴇʀ sᴇɴᴅɪɴɢ ᴀ sᴄʀᴇᴇɴsʜᴏᴛ ᴘʟᴇᴀsᴇ ɢɪᴠᴇ ᴜs sᴏᴍᴇ ᴛɪᴍᴇ ᴛᴏ ᴀᴅᴅ ʏᴏᴜ ɪɴ ᴛʜᴇ ᴘʀᴇᴍɪᴜᴍ
+Free Bot အသုံးပြုနည်း
+https://t.me/MKSVIPLINK1/14
 """
         await message.reply_text(f"{price}") 
 
