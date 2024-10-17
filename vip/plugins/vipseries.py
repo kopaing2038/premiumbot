@@ -33,7 +33,8 @@ async def key_start(client, message):
         [
             ["လက်ရှိတင်ထားပြီးသော VIP Series များ"],  # First row
             ["မန်ဘာကြေးဘယ်လောက်လဲ", "မန်ဘာကြေးသွင်းရန်အကောင့်"],  # Second row
-            ["Korean Series & Movie Free ကြည့်ရန်"],  # Third row
+            ["Korean Series & Movie Free ကြည့်ရန်"],
+            ["Premium ဖြင့်ကြည့်ရန်"], # Third row
             ["Admin Account"]  # Fourth row
         ],
         resize_keyboard=True  # Makes the keyboard smaller
@@ -133,16 +134,16 @@ https://t.me/Anime_Animation_Series
         await message.reply_text("https://t.me/KPOwner")  
 
     elif message.text == "KBZ Pay":
-        await message.reply_text("KBZ Pay\n\n09404840521\nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")
+        await message.reply_text("KBZ Pay\n\n<code> 09404840521</code> \nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")
 
     elif message.text == "AYA Pay":
-        await message.reply_text("AYA Pay\n\n09404840521\nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")  
+        await message.reply_text("AYA Pay\n\n<code> 09404840521</code> \nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")  
 
     elif message.text == "Wave Pay":
-        await message.reply_text("Wave Money Pay\n\n09681111552\nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")
+        await message.reply_text("Wave Money Pay\n\n<code> 09681111552</code> \nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner")
 
     elif message.text == "Mytel Pay":
-        await message.reply_text("Mytel Pay\n\n09681111552\nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner") 
+        await message.reply_text("Mytel Pay\n\n<code> 09681111552</code> \nSitt Paing Oo\n\nငွေလွဲပြီးရင် ဒီအကောင့်ကို 👇👇 Screenshot လေးပို့ပေးပါ @KPOwner") 
 
     elif message.text == "ငွေလွှဲပြီး ပြေစာပို့ရန် Admin အကောင့်":
         await message.reply_text("https://t.me/KPOwner")  
@@ -153,6 +154,7 @@ https://t.me/Anime_Animation_Series
                 ["လက်ရှိတင်ထားပြီးသော VIP Series များ"],  # First row
                 ["မန်ဘာကြေးဘယ်လောက်လဲ", "မန်ဘာကြေးသွင်းရန်အကောင့်"],  # Third row (separated buttons)
                 ["Korean Series & Movie Free ကြည့်ရန်"],
+                ["Premium ဖြင့်ကြည့်ရန်"], # Third row
                 ["Admin Account"]                     # Fourth row
             ],
             resize_keyboard=True  # Optional: Makes the keyboard smaller
@@ -171,6 +173,70 @@ Owner - @KPOWNER""",
             reply_markup=keyboard
         )
 
+    elif message.text == "Premium ဖြင့်ကြည့်ရန်":
+        keyboard = ReplyKeyboardMarkup(
+            [ 
+                ["လစဉ်ကြေးဘယ်လောက်လဲ"],  # First row
+                ["ပြေစာပို့ရန် Admin အကောင့်"],
+                ["နာမူနာ ကြည့်ရန်"],
+                ["🔙 Back"]# Fourth row
+            ],
+            resize_keyboard=True  # Optional: Makes the keyboard smaller
+        )
+    
+        await message.reply_text("လစဉ်ကြေးဖြင့် Bot ထဲတွင်မိမိနှစ်သက်ရာ ဇာတ်ကားအားရှာ‌ဖွေကြည့်ရူ့ရသော feature ဖြစ်ပါသည်။", reply_markup=keyboard)  
 
+    elif message.text == "လစဉ်ကြေးဘယ်လောက်လဲ":
+        price = """မင်္ဂလာပါ  
+
+- ᴀᴠᴀɪʟᴀʙʟᴇ ᴘʟᴀɴs - 
+
+-• 1 ᴡᴇᴇᴋ ᴘʟᴀɴ [ 1500/mmk ]
+ • 1 ᴍᴏɴᴛʜ ᴘʟᴀɴ [ 3000/mmk ]
+ • 2 ᴍᴏɴᴛʜ ᴘʟᴀɴ [ 5000/mmk ]
+ • 3 ᴍᴏɴᴛʜ ᴘʟᴀɴ [ 8000/mmk ]
+ • 6 ᴍᴏɴᴛʜ ᴘʟᴀɴ [ 10000/mmk ]
+ • 9 ᴍᴏɴᴛʜs ᴘʟᴀɴ [ 13000/mmk ]
+ • 1 Yᴇᴀʀs ᴘʟᴀɴ [ 15000/mmk ]
+ • 2 Yᴇᴀʀs ᴘʟᴀɴ [ 25000/mmk ]
+ • 3 Yᴇᴀʀs ᴘʟᴀɴ [ 35000/mmk ]
+ • ʟɪғᴇᴛɪᴍᴇ ᴘʟᴀɴ [ 50000/mmk ]
+
+🎁 ᴘʀᴇᴍɪᴜᴍ ғᴇᴀᴛᴜʀᴇs 🎁
+
+○ ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴠᴇʀɪғʏ
+○ ɴᴏ ɴᴇᴇᴅ ᴛᴏ ᴏᴘᴇɴ ʟɪɴᴋ
+○ ᴅɪʀᴇᴄᴛ ғɪʟᴇs
+○ ᴀᴅ-ғʀᴇᴇ ᴇxᴘᴇʀɪᴇɴᴄᴇ
+○ ʜɪɢʜ-sᴘᴇᴇᴅ ᴅᴏᴡɴʟᴏᴀᴅ ʟɪɴᴋ
+○ ᴍᴜʟᴛɪ-ᴘʟᴀʏᴇʀ sᴛʀᴇᴀᴍɪɴɢ ʟɪɴᴋs
+○ ᴜɴʟɪᴍɪᴛᴇᴅ ᴍᴏᴠɪᴇs & sᴇʀɪᴇs
+○ ꜰᴜʟʟ ᴀᴅᴍɪɴ sᴜᴘᴘᴏʀᴛ
+○ ʀᴇǫᴜᴇsᴛ ᴡɪʟʟ ʙᴇ ᴄᴏᴍᴘʟᴇᴛᴇᴅ ɪɴ 3ʜ ɪꜰ ᴀᴠᴀɪʟᴀʙʟᴇ
+
+✨* Payment methods:
+
+AYA PAY <code>09404840521</code> 
+KBZ PAY <code>09404840521</code> 
+
+Wave Pay <code>09681111552</code> 
+Mytel Pay <code>09681111552</code> 
+Sitt Paing Oo
+
+ADMIN ACC @KOPAINGLAY15
+
+ᴄʟɪᴄᴋ ᴛᴏ ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴀᴄᴛɪᴠᴇ ᴘʟᴀɴ /myplan
+
+💢 ᴍᴜsᴛ sᴇɴᴅ sᴄʀᴇᴇɴsʜᴏᴛ ᴀғᴛᴇʀ ᴘᴀʏᴍᴇɴᴛ
+
+‼️ ᴀғᴛᴇʀ sᴇɴᴅɪɴɢ ᴀ sᴄʀᴇᴇɴsʜᴏᴛ ᴘʟᴇᴀsᴇ ɢɪᴠᴇ ᴜs sᴏᴍᴇ ᴛɪᴍᴇ ᴛᴏ ᴀᴅᴅ ʏᴏᴜ ɪɴ ᴛʜᴇ ᴘʀᴇᴍɪᴜᴍ
+"""
+        await message.reply_text(f"{price}") 
+
+    elif message.text == "ပြေစာပို့ရန် Admin အကောင့်":
+        await message.reply_text("https://t.me/KOPAINGLAY15")  
+
+    elif message.text == "နာမူနာ ကြည့်ရန်":
+        await message.reply_text("နာမူနာ video ကြည့်ရန်\n\nhttps://t.me/MKSVIPLINK1/15")  
 
 #
