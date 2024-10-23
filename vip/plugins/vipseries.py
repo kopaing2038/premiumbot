@@ -33,7 +33,7 @@ async def key_start(client, message):
             [InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KPOWNER")],
         ]
         reply_markup = InlineKeyboardMarkup(btn)
-        await msg.reply_photo(
+        await message.reply_photo(
             photo=PAYMENT_QR,
             caption=PAYMENT_TEXT,
             reply_markup=reply_markup
