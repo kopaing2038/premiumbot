@@ -34,7 +34,7 @@ NEW_USER_TXT = """<b>#New_User
 ≈ ɴᴀᴍᴇ:- {}</b>"""
 
 
-PAYMENT_TEXT = """မင်္ဂလာပါ  
+PAYMENT_TEXT = f"""မင်္ဂလာပါ  
 
 1. English Series အတွက်က Lifetime ကိုမှ 4000 Kyats ပဲကျသင့်ပါမယ်။
 English Series List
@@ -55,4 +55,14 @@ https://t.me/Anime_Animation_Series
 ⭐️ ကြိုက်တဲ့ Series Channel 2 ခုကို Package Membership ဝင်ရင်တော့ Lifetime ကိုမှ 6000 Kyats ပဲ ကျသင့်ပါမယ်‌နော်။ (လူဦးရေကန့်သတ်ထားပါတယ်နော်။)
 
 ⭐️ ကြိုက်နှစ်သက်ရာ Series Channel 3 ခုအား Package Membership Lifetime ကိုမှ 10000 Kyats နဲ့ မန်ဘာဝင်မယ်ဆိုရင် Series Channel 1 ခု အပိုဝင်ခွင်ရမှာပါနော်။ (လူဦးရေကန့်သတ်ထားပါတယ်နော်။)
+
+💵 KBZ PAY 
+<code>09404840521</code>
+SITT PAING OO
+
+💵 WAVE PAY 
+<code>09681111552</code>
+SITT PAING OO
+
+Owner - @KPOWNER
 """
