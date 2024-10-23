@@ -28,6 +28,17 @@ async def key_start(client, message):
         await db.add_user(message.from_user.id, message.from_user.first_name)
         #await client.send_message(LOG_CHANNEL, NEW_USER_TXT.format(message.from_user.id, user))
         
+    if len(message.command) == 2 and message.command[1] == 'vip':
+        btn = [             
+            [InlineKeyboardButton("ꜱᴇɴᴅ ᴘᴀʏᴍᴇɴᴛ ʀᴇᴄᴇɪᴘᴛ 🧾", url=f"https://t.me/KPOWNER")],
+        ]
+        reply_markup = InlineKeyboardMarkup(btn)
+        await msg.reply_photo(
+            photo=PAYMENT_QR,
+            caption=PAYMENT_TEXT,
+            reply_markup=reply_markup
+        )
+        return
     # Create the custom keyboard
     keyboard = ReplyKeyboardMarkup(
         [
@@ -88,31 +99,9 @@ async def handle_buttons(client, message):
 
 
     elif message.text == "မန်ဘာကြေးဘယ်လောက်လဲ":
-        price = """မင်္ဂလာပါ  
-
-1. English Series အတွက်က Lifetime ကိုမှ 4000 Kyats ပဲကျသင့်ပါမယ်။
-English Series List
-https://t.me/Serieslists
-
-2. Thailand Series အတွက်က Lifetime ကိုမှ 3000 Kyats ပဲကျသင့်ပါမယ်။
-Thailand Series List
-https://t.me/ThaiSeries_MTS
-
-3. Chinese Series အတွက်က Lifetime ကိုမှ 3000 Kyats ပဲကျသင့်ပါမယ်။ 
-Chinese Series List
-https://t.me/Chinese_Series_MCS
-
-4. Anime & Animation အတွက်က Lifetime ကိုမှ 3000 Kyats ပဲကျသင့်ပါမယ်။ 
-Anime & Animation List
-https://t.me/Anime_Animation_Series
- 
-⭐️ ကြိုက်တဲ့ Series Channel 2 ခုကို Package Membership ဝင်ရင်တော့ Lifetime ကိုမှ 5000 Kyats ပဲ ကျသင့်ပါမယ်‌နော်။ (လူဦးရေကန့်သတ်ထားပါတယ်နော်။)
-
-⭐️ ကြိုက်နှစ်သက်ရာ Series Channel 3 ခုအား Package Membership Lifetime ကိုမှ 9000 Kyats နဲ့ မန်ဘာဝင်မယ်ဆိုရင် Series Channel 1 ခု အပိုဝင်ခွင်ရမှာပါနော်။ (လူဦးရေကန့်သတ်ထားပါတယ်နော်။)
-"""
+        price = PAYMENT_TEXT
         await message.reply_text(f"{price}") 
-
-
+        
     elif message.text == "မန်ဘာကြေးသွင်းရန်အကောင့်":
         keyboard = ReplyKeyboardMarkup(
             [ 
