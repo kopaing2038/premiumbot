@@ -30,13 +30,14 @@ collection = db[Config.COLLECTION_NAME]
 LAST_SENT_FILE = "last_sent.json" 
 CHANNEL_ID = "-1002491425774"
 
+# Function to get the last sent video ID from file
 def get_last_sent_video():
     if os.path.exists(LAST_SENT_FILE):
         with open(LAST_SENT_FILE, "r") as f:
             return json.load(f).get("last_sent_id", None)
     return None
 
-# Function to save the last sent video ID
+# Function to save the last sent video ID to file
 def save_last_sent_video(video_id):
     with open(LAST_SENT_FILE, "w") as f:
         json.dump({"last_sent_id": video_id}, f)
@@ -53,16 +54,20 @@ async def send_video_to_channel(file_path):
 async def send_videos():
     last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
     videos = collection.find()  # Get all video documents from MongoDB
-
+    
+    # Flag to determine when to start sending videos
     start_sending = False
+
+    # Loop through the videos in the collection
     for video in videos:
         video_id = str(video.get("_id"))
-
+        
         # If the video ID matches the last sent ID, start sending from the next video
         if last_sent_id and video_id == last_sent_id:
             start_sending = True
             continue  # Skip the last sent video
-
+        
+        # Start sending only after the last sent video is found
         if start_sending:
             file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
             if file_path and os.path.exists(file_path):
@@ -74,6 +79,7 @@ async def send_videos():
         else:
             # Skip videos before the last sent one
             continue
+
 
 async def start():
     st = time.time()
