@@ -30,18 +30,6 @@ collection = db[Config.COLLECTION_NAME]
 LAST_SENT_FILE = "last_sent.json" 
 CHANNEL_ID = "-1002491425774"
 
-def get_last_sent_video():
-    if os.path.exists(LAST_SENT_FILE):
-        with open(LAST_SENT_FILE, "r") as f:
-            return json.load(f).get("last_sent_id", None)
-    return None
-
-# Function to save the last sent video ID to a file
-def save_last_sent_video(video_id):
-    with open(LAST_SENT_FILE, "w") as f:
-        json.dump({"last_sent_id": video_id}, f)
-
-# Asynchronous function to send video to Telegram Channel
 async def send_video_to_channel(bot, file_path):
     try:
         await bot.send_video(chat_id=CHANNEL_ID, video=file_path)
@@ -51,31 +39,14 @@ async def send_video_to_channel(bot, file_path):
 
 # Asynchronous function to send all videos with a 3-second delay
 async def send_videos(bot):
-    last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
     videos = collection.find()  # Get all video documents from MongoDB
-    
-    # Skip videos that have already been sent
-    start_sending = False
     for video in videos:
-        video_id = str(video.get("_id"))
-        
-        # If the video ID matches the last sent ID, start sending from the next video
-        if last_sent_id and video_id == last_sent_id:
-            start_sending = True
-            continue  # Skip the last sent video
-        
-        # Start sending only after the last sent video is found
-        if start_sending:
-            file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
-            if file_path and os.path.exists(file_path):
-                await send_video_to_channel(bot, file_path)  # Send the video to the channel
-                save_last_sent_video(video_id)  # Save the current video as the last sent video
-                await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
-            else:
-                print(f"File path {file_path} not found or invalid.")
+        file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
+        if file_path and os.path.exists(file_path):
+            await send_video_to_channel(bot, file_path)  # Send the video to the channel
+            await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
         else:
-            # Skip videos before the last sent one
-            continue
+            print(f"File path {file_path} not found or invalid.")
 
 
 async def start():
