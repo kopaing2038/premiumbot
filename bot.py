@@ -30,23 +30,25 @@ collection = db[Config.COLLECTION_NAME]
 LAST_SENT_FILE = "last_sent.json" 
 CHANNEL_ID = "-1002491425774"
 
-async def send_video_to_channel(bot, file_path):
+async def send_video_to_channel(bot, file_name, file_id):
     try:
-        await bot.send_video(chat_id=CHANNEL_ID, video=file_path)
-        print(f"Video sent successfully: {file_path}")
+        # Send the video using file_id
+        await bot.send_video(chat_id=CHANNEL_ID, video=file_id)
+        print(f"Video {file_id} sent successfully!")
     except Exception as e:
-        print(f"Error sending video {file_path}: {e}")
+        print(f"Error sending video {file_id}: {e}")
 
-# Asynchronous function to send all videos with a 3-second delay
+# Function to get videos from MongoDB and send to channel
 async def send_videos(bot):
     videos = collection.find()  # Get all video documents from MongoDB
     for video in videos:
-        file_path = video.get("file_name")  # Assuming the file path is saved in MongoDB
-        if file_path and os.path.exists(file_path):
-            await send_video_to_channel(bot, file_path)  # Send the video to the channel
-            await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
+        file_id = video.get("file_id")  # Get the file_id from the MongoDB document
+        file_name = video.get("file_name")
+        if file_id:
+            await send_video_to_channel(bot, file_name, file_id)  # Send the video to the channel
+            await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
-            print(f"File path {file_path} not found or invalid.")
+            print(f"File ID not found for video: {video.get('file_name')}")
 
 
 async def start():
