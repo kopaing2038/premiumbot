@@ -30,25 +30,52 @@ collection = db[Config.COLLECTION_NAME]
 LAST_SENT_FILE = "last_sent.json" 
 CHANNEL_ID = "-1002491425774"
 
+
+# Function to read the last sent video from the JSON file
+def get_last_sent_video():
+    try:
+        with open(LAST_SENT_FILE, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None  # No last sent video found
+
+# Function to save the last sent video to the JSON file
+def save_last_sent_video(file_id):
+    with open(LAST_SENT_FILE, "w") as f:
+        json.dump({"last_sent_file_id": file_id}, f)
+
+# Function to send a video to the channel
 async def send_video_to_channel(bot, file_name, file_id):
     try:
         # Send the video using file_id
         await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-        #print(f"Video {file_id} sent successfully!")
+        print(f"Video {file_id} sent successfully!")
+        save_last_sent_video(file_id)  # Save the last sent video file_id
     except Exception as e:
         print(f"Error sending video {file_id}: {e}")
 
 # Function to get videos from MongoDB and send to channel
 async def send_videos(bot):
+    last_sent = get_last_sent_video()  # Get the last sent video info
+    last_sent_file_id = last_sent["last_sent_file_id"] if last_sent else None
+    
     videos = collection.find()  # Get all video documents from MongoDB
+    sending = False
+    
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
-        if file_id:
+        
+        if last_sent_file_id and file_id == last_sent_file_id:
+            sending = True  # Start sending videos after the last sent video
+            print(f"Resuming from video: {file_name}")
+        
+        if sending:
             await send_video_to_channel(bot, file_name, file_id)  # Send the video to the channel
             await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
-            print(f"File ID not found for video: {video.get('file_name')}")
+            print(f"Skipping video: {file_name} until last sent is reached.")
+
 
 
 async def start():
