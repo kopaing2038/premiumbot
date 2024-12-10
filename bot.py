@@ -36,8 +36,18 @@ savecollection = savedb[Config.COLLECTION_NAME]
 
 CHANNEL_ID = "-1002491425774"
 
+
+
 async def save_file(bot, file_name, file_id):
-    """Save file in database"""
+    """Save file in database, check for duplicates"""
+    # Check if the file already exists in the database based on file_id or file_name
+    existing_file = savecollection.find_one({'$or': [{'file_id': file_id}, {'file_name': file_name}]})
+    
+    if existing_file:
+        print(f"{file_name} is already saved in the database. Skipping...")
+        return False, 0  # Return False as file is already in database
+    
+    # If not duplicate, proceed to save the file
     file = {
         'file_id': file_id,
         'file_name': file_name
@@ -55,11 +65,9 @@ async def save_file(bot, file_name, file_id):
             print(f"Invalid file ID: {file_id}. Skipping.")
             return False, 0
             
-    except DuplicateKeyError:      
-        print(f"{file_name} is already saved.")
-        return False, 0
-
-
+    except DuplicateKeyError:
+        print(f"{file_name} is already saved in the database. Skipping.")
+        return False, 0  # File already exists in DB, skipping
 
 # Function to get videos from MongoDB and send to channel
 async def send_videos(bot):
