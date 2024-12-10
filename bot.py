@@ -54,7 +54,7 @@ async def send_video_to_channel(file_path):
 async def send_videos():
     last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
     videos = collection.find()  # Get all video documents from MongoDB
-    
+    print(f"Video sent Now")
     # Flag to determine when to start sending videos
     start_sending = False
 
