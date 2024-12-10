@@ -30,35 +30,32 @@ collection = db[Config.COLLECTION_NAME]
 LAST_SENT_FILE = "last_sent.json" 
 CHANNEL_ID = "-1002491425774"
 
-# Function to get the last sent video ID from file
 def get_last_sent_video():
     if os.path.exists(LAST_SENT_FILE):
         with open(LAST_SENT_FILE, "r") as f:
             return json.load(f).get("last_sent_id", None)
     return None
 
-# Function to save the last sent video ID to file
+# Function to save the last sent video ID to a file
 def save_last_sent_video(video_id):
     with open(LAST_SENT_FILE, "w") as f:
         json.dump({"last_sent_id": video_id}, f)
 
 # Asynchronous function to send video to Telegram Channel
-async def send_video_to_channel(file_path):
+async def send_video_to_channel(bot, file_path):
     try:
-        await TechKPBot.send_video(chat_id=CHANNEL_ID, video=file_path)
+        await bot.send_video(chat_id=CHANNEL_ID, video=file_path)
         print(f"Video sent successfully: {file_path}")
     except Exception as e:
         print(f"Error sending video {file_path}: {e}")
 
 # Asynchronous function to send all videos with a 3-second delay
-async def send_videos():
+async def send_videos(bot):
     last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
     videos = collection.find()  # Get all video documents from MongoDB
     print(f"Video sent Now")
-    # Flag to determine when to start sending videos
+    # Skip videos that have already been sent
     start_sending = False
-
-    # Loop through the videos in the collection
     for video in videos:
         video_id = str(video.get("_id"))
         
@@ -71,7 +68,7 @@ async def send_videos():
         if start_sending:
             file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
             if file_path and os.path.exists(file_path):
-                await send_video_to_channel(file_path)  # Send the video to the channel
+                await send_video_to_channel(bot, file_path)  # Send the video to the channel
                 save_last_sent_video(video_id)  # Save the current video as the last sent video
                 await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
             else:
@@ -79,7 +76,6 @@ async def send_videos():
         else:
             # Skip videos before the last sent one
             continue
-
 
 async def start():
     st = time.time()
@@ -109,7 +105,7 @@ async def start():
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
     await VIP.start()
-    await send_videos()
+    await send_videos(TechKPBot)
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
