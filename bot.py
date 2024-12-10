@@ -32,48 +32,48 @@ CHANNEL_ID = "-1002491425774"
 
 
 import json
+import asyncio
+from pymongo import MongoClient
+from your_bot_module import Bot  # Ensure to import your bot class
 
-LAST_SENT_FILE = "last_sent.json" 
+client = MongoClient(Config.DATABASE_URI)
+db = client[Config.SESSION_NAME]
+collection = db[Config.COLLECTION_NAME]
+LAST_SENT_FILE = "last_sent.json"
+CHANNEL_ID = "-1002491425774"
 
-# Function to save the last sent video id
-def save_last_sent_video_id(last_sent_id):
-    with open(LAST_SENT_FILE, "w") as f:
-        json.dump({"last_sent_id": last_sent_id}, f)
-
-# Modified send_video_to_channel function to save last sent video
-async def send_video_to_channel(bot, file_name, file_id, video_id):
+async def send_video_to_channel(bot, file_name, file_id):
     try:
-        # Send the video using file_id
         await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-        # Save last sent video id
-        save_last_sent_video_id(str(video_id))
-        # print(f"Video {file_id} sent successfully!")
     except Exception as e:
         print(f"Error sending video {file_id}: {e}")
 
-# Function to get videos from MongoDB and send to channel
-async def send_videos(bot):
-    # Read last sent video id from the last_sent.json file
-    last_sent_id = None
+def get_last_sent_video():
     try:
-        with open(LAST_SENT_FILE, "r") as f:
-            data = json.load(f)
-            last_sent_id = data.get("last_sent_id")
+        with open(LAST_SENT_FILE, "r") as file:
+            data = json.load(file)
+            return data.get("last_sent_file_id")
     except FileNotFoundError:
-        print("No previous last sent file found.")
-    
-    # Find the video starting from the last sent id
-    query = {}  # Default query to get all videos
-    if last_sent_id:
-        query["_id"] = {"$gt": last_sent_id}  # Only get videos after the last sent one
+        return None  # If the file doesn't exist, start from the beginning
 
-    videos = collection.find(query)  # Get video documents from MongoDB
+def update_last_sent_video(file_id):
+    with open(LAST_SENT_FILE, "w") as file:
+        json.dump({"last_sent_file_id": file_id}, file)
+
+# Function to get videos from MongoDB and send to the channel
+async def send_videos(bot):
+    last_sent_file_id = get_last_sent_video()  # Get the last sent file_id
+    videos = collection.find()  # Get all video documents from MongoDB
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
-        video_id = video.get("_id")  # Get the video's _id
         if file_id:
-            await send_video_to_channel(bot, file_name, file_id, video_id)  # Send the video to the channel
+            # Skip videos that have already been sent
+            if last_sent_file_id and file_id == last_sent_file_id:
+                continue  # Skip the last sent file to avoid re-sending it
+
+            await send_video_to_channel(bot, file_name, file_id)  # Send the video to the channel
+            update_last_sent_video(file_id)  # Update the last sent file_id
             await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
