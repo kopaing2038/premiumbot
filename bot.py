@@ -17,7 +17,7 @@ from aiohttp import web
 from KPBOT.util.keepalive import ping_server
 from vip.bot import VIP
 from pymongo import MongoClient
-
+from pymongo.errors import DuplicateKeyError
 
 TechKPBot.start()
 loop = asyncio.get_event_loop()
@@ -27,34 +27,30 @@ loop = asyncio.get_event_loop()
 client = MongoClient(Config.DATABASE_URI)
 db = client[Config.SESSION_NAME]
 collection = db[Config.COLLECTION_NAME]
-LAST_SENT_FILE = "last_sent.json" 
+
+MONGO_URI = "mongodb+srv://msrpremium:msrpremium@cluster0.hhap4r4.mongodb.net/?retryWrites=true&w=majority"  # MongoDB server URI
+saveclient = MongoClient(MONGO_URI)
+savedb = saveclient[Config.SESSION_NAME]
+savecollection = savedb[Config.COLLECTION_NAME]
+
+
 CHANNEL_ID = "-1002491425774"
 
-
-async def is_video_sent(file_id):
-    # You can use a collection to track sent videos (e.g., a separate collection or a file)
-    # For now, we are using a set to store file_ids of already sent videos
-    if hasattr(is_video_sent, "sent_files"):
-        if file_id in is_video_sent.sent_files:
-            return True
-        is_video_sent.sent_files.add(file_id)
-    else:
-        is_video_sent.sent_files = {file_id}
-    return False
-
-# Function to send video to the channel
-async def send_video_to_channel(bot, file_name, file_id):
+async def save_file(bot, file_name, file_id):
+    """Save file in database"""
+    file = {
+        'file_id': file_id,
+        'file_name': file_name
+    }
     try:
-        # Skip sending if video has already been sent
-        if await is_video_sent(file_id):
-            print(f"Video {file_id} is a duplicate, skipping...")
-            return
-
-        # Send the video using file_id
+        savecollection.insert_one(file)
         await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-        print(f"Video {file_id} sent successfully!")
-    except Exception as e:
-        print(f"Error sending video {file_id}: {e}")
+        print(f"{file_name} is successfully saved.")
+        return True, 1
+    except DuplicateKeyError:      
+        print(f"{file_name} is already saved.")
+        return False, 0
+
 
 # Function to get videos from MongoDB and send to channel
 async def send_videos(bot):
@@ -63,7 +59,7 @@ async def send_videos(bot):
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
         if file_id:
-            await send_video_to_channel(bot, file_name, file_id)  # Send the video to the channel
+            await save_file(bot, file_name, file_id)  # Send the video to the channel
             await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
