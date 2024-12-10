@@ -44,12 +44,21 @@ async def save_file(bot, file_name, file_id):
     }
     try:
         savecollection.insert_one(file)
-        await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-        print(f"{file_name} is successfully saved.")
-        return True, 1
+        print(f"Attempting to send file: {file_name}")
+        
+        # Validate file_id before sending
+        try:
+            await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
+            print(f"{file_name} is successfully saved.")
+            return True, 1
+        except ValueError:
+            print(f"Invalid file ID: {file_id}. Skipping.")
+            return False, 0
+            
     except DuplicateKeyError:      
         print(f"{file_name} is already saved.")
         return False, 0
+
 
 
 # Function to get videos from MongoDB and send to channel
