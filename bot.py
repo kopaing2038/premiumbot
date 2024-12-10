@@ -1,4 +1,4 @@
-import logging, asyncio, time, pytz, re, os
+import logging, asyncio, time, pytz, re, os, json
 from datetime import datetime, date
 from aiohttp import web
 from pyrogram import __version__, filters, types
@@ -16,11 +16,65 @@ from TechKP.plugins import web_server
 from aiohttp import web
 from KPBOT.util.keepalive import ping_server
 from vip.bot import VIP
+from pymongo import MongoClient
+from info import *
 
 TechKPBot.start()
 loop = asyncio.get_event_loop()
 
 
+
+client = MongoClient(Config.DATABASE_URI)
+db = client[Config.SESSION_NAME]
+collection = db[Config.COLLECTION_NAME]
+LAST_SENT_FILE = "last_sent.json" 
+CHANNEL_ID = "-1002491425774"
+def get_last_sent_video():
+    if os.path.exists(LAST_SENT_FILE):
+        with open(LAST_SENT_FILE, "r") as f:
+            return json.load(f).get("last_sent_id", None)
+    return None
+
+# Function to save the last sent video ID to a file
+def save_last_sent_video(video_id):
+    with open(LAST_SENT_FILE, "w") as f:
+        json.dump({"last_sent_id": video_id}, f)
+
+# Asynchronous function to send video to Telegram Channel
+async def send_video_to_channel(file_path):
+    try:
+        await bot.send_video(chat_id=CHANNEL_ID, video=file_path)
+        print(f"Video sent successfully: {file_path}")
+    except Exception as e:
+        print(f"Error sending video {file_path}: {e}")
+
+# Asynchronous function to send all videos with a 3-second delay
+async def send_videos():
+    last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
+    videos = collection.find()  # Get all video documents from MongoDB
+    
+    # Skip videos that have already been sent
+    start_sending = False
+    for video in videos:
+        video_id = str(video.get("_id"))
+        
+        # If the video ID matches the last sent ID, start sending from the next video
+        if last_sent_id and video_id == last_sent_id:
+            start_sending = True
+            continue  # Skip the last sent video
+        
+        # Start sending only after the last sent video is found
+        if start_sending:
+            file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
+            if file_path and os.path.exists(file_path):
+                await send_video_to_channel(file_path)  # Send the video to the channel
+                save_last_sent_video(video_id)  # Save the current video as the last sent video
+                await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
+            else:
+                print(f"File path {file_path} not found or invalid.")
+        else:
+            # Skip videos before the last sent one
+            continue
 
 async def start():
     st = time.time()
@@ -50,6 +104,7 @@ async def start():
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
     await VIP.start()
+
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
@@ -75,7 +130,11 @@ async def start():
                 f"🕥 ᴛɪᴍᴇ ᴛᴀᴋᴇɴ - <code>{seconds} sᴇᴄᴏɴᴅs</code></b>"
             )
         )
+    await send_videos()
     await idle()
+
+
+
 
 
 
