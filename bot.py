@@ -31,19 +31,27 @@ LAST_SENT_FILE = "last_sent.json"
 CHANNEL_ID = "-1002491425774"
 
 
-sent_file_ids = set()
+async def is_video_sent(file_id):
+    # You can use a collection to track sent videos (e.g., a separate collection or a file)
+    # For now, we are using a set to store file_ids of already sent videos
+    if hasattr(is_video_sent, "sent_files"):
+        if file_id in is_video_sent.sent_files:
+            return True
+        is_video_sent.sent_files.add(file_id)
+    else:
+        is_video_sent.sent_files = {file_id}
+    return False
 
+# Function to send video to the channel
 async def send_video_to_channel(bot, file_name, file_id):
     try:
-        # Check if the file_id has already been sent
-        if file_id in sent_file_ids:
-            print(f"Skipping already sent video: {file_name}")
+        # Skip sending if video has already been sent
+        if await is_video_sent(file_id):
+            print(f"Video {file_id} is a duplicate, skipping...")
             return
 
         # Send the video using file_id
         await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-        # Mark the file_id as sent by adding it to the sent_file_ids set
-        sent_file_ids.add(file_id)
         print(f"Video {file_id} sent successfully!")
     except Exception as e:
         print(f"Error sending video {file_id}: {e}")
@@ -59,9 +67,6 @@ async def send_videos(bot):
             await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
-
-
-
 
 
 async def start():
