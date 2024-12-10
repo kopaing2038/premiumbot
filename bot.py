@@ -41,7 +41,7 @@ async def send_video_to_channel(bot, file_path):
 async def send_videos(bot):
     videos = collection.find()  # Get all video documents from MongoDB
     for video in videos:
-        file_path = video.get("file_path")  # Assuming the file path is saved in MongoDB
+        file_path = video.get("file_name")  # Assuming the file path is saved in MongoDB
         if file_path and os.path.exists(file_path):
             await send_video_to_channel(bot, file_path)  # Send the video to the channel
             await asyncio.sleep(3)  # Wait for 3 seconds before sending the next video
