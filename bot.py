@@ -33,8 +33,8 @@ CHANNEL_ID = "-1002491425774"
 async def send_video_to_channel(bot, file_name, file_id):
     try:
         # Send the video using file_id
-        await bot.send_video(chat_id=CHANNEL_ID, video=file_id)
-        print(f"Video {file_id} sent successfully!")
+        await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
+        #print(f"Video {file_id} sent successfully!")
     except Exception as e:
         print(f"Error sending video {file_id}: {e}")
 
