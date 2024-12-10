@@ -53,7 +53,7 @@ async def send_video_to_channel(bot, file_path):
 async def send_videos(bot):
     last_sent_id = get_last_sent_video()  # Get the ID of the last sent video
     videos = collection.find()  # Get all video documents from MongoDB
-    print(f"Video sent Now")
+    
     # Skip videos that have already been sent
     start_sending = False
     for video in videos:
@@ -76,6 +76,7 @@ async def send_videos(bot):
         else:
             # Skip videos before the last sent one
             continue
+
 
 async def start():
     st = time.time()
