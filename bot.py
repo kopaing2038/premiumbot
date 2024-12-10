@@ -31,16 +31,6 @@ LAST_SENT_FILE = "last_sent.json"
 CHANNEL_ID = "-1002491425774"
 
 
-import json
-import asyncio
-from pymongo import MongoClient
-from your_bot_module import Bot  # Ensure to import your bot class
-
-client = MongoClient(Config.DATABASE_URI)
-db = client[Config.SESSION_NAME]
-collection = db[Config.COLLECTION_NAME]
-LAST_SENT_FILE = "last_sent.json"
-CHANNEL_ID = "-1002491425774"
 
 async def send_video_to_channel(bot, file_name, file_id):
     try:
