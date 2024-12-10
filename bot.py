@@ -17,7 +17,7 @@ from aiohttp import web
 from KPBOT.util.keepalive import ping_server
 from vip.bot import VIP
 from pymongo import MongoClient
-from info import *
+
 
 TechKPBot.start()
 loop = asyncio.get_event_loop()
