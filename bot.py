@@ -31,20 +31,20 @@ LAST_SENT_FILE = "last_sent.json"
 CHANNEL_ID = "-1002491425774"
 
 def get_last_sent_video():
-    if os.path.exists(Config.LAST_SENT_FILE):
-        with open(Config.LAST_SENT_FILE, "r") as f:
+    if os.path.exists(LAST_SENT_FILE):
+        with open(LAST_SENT_FILE, "r") as f:
             return json.load(f).get("last_sent_id", None)
     return None
 
 # Function to save the last sent video ID
 def save_last_sent_video(video_id):
-    with open(Config.LAST_SENT_FILE, "w") as f:
+    with open(LAST_SENT_FILE, "w") as f:
         json.dump({"last_sent_id": video_id}, f)
 
 # Asynchronous function to send video to Telegram Channel
 async def send_video_to_channel(file_path):
     try:
-        await bot.send_video(chat_id=Config.CHANNEL_ID, video=file_path)
+        await TechKPBot.send_video(chat_id=CHANNEL_ID, video=file_path)
         print(f"Video sent successfully: {file_path}")
     except Exception as e:
         print(f"Error sending video {file_path}: {e}")
