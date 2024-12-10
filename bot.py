@@ -31,42 +31,35 @@ LAST_SENT_FILE = "last_sent.json"
 CHANNEL_ID = "-1002491425774"
 
 
+sent_file_ids = set()
 
 async def send_video_to_channel(bot, file_name, file_id):
     try:
+        # Check if the file_id has already been sent
+        if file_id in sent_file_ids:
+            print(f"Skipping already sent video: {file_name}")
+            return
+
+        # Send the video using file_id
         await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
+        # Mark the file_id as sent by adding it to the sent_file_ids set
+        sent_file_ids.add(file_id)
+        print(f"Video {file_id} sent successfully!")
     except Exception as e:
         print(f"Error sending video {file_id}: {e}")
 
-def get_last_sent_video():
-    try:
-        with open(LAST_SENT_FILE, "r") as file:
-            data = json.load(file)
-            return data.get("last_sent_file_id")
-    except FileNotFoundError:
-        return None  # If the file doesn't exist, start from the beginning
-
-def update_last_sent_video(file_id):
-    with open(LAST_SENT_FILE, "w") as file:
-        json.dump({"last_sent_file_id": file_id}, file)
-
-# Function to get videos from MongoDB and send to the channel
+# Function to get videos from MongoDB and send to channel
 async def send_videos(bot):
-    last_sent_file_id = get_last_sent_video()  # Get the last sent file_id
     videos = collection.find()  # Get all video documents from MongoDB
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
         if file_id:
-            # Skip videos that have already been sent
-            if last_sent_file_id and file_id == last_sent_file_id:
-                continue  # Skip the last sent file to avoid re-sending it
-
             await send_video_to_channel(bot, file_name, file_id)  # Send the video to the channel
-            update_last_sent_video(file_id)  # Update the last sent file_id
             await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
+
 
 
 
