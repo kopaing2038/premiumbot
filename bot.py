@@ -62,19 +62,8 @@ async def save_file(bot, file_name, file_id):
         return False, 0
 
 
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
 async def send_videos(bot):
     videos = collection.find()  # Get all video documents from MongoDB
-    current = 0  # Tracks the number of messages processed
-    total_files = 0  # Tracks the number of saved files
-    duplicate = 0  # Tracks duplicate files
-    deleted = 0  # Tracks deleted messages
-    no_media = 0  # Tracks non-media messages
-    unsupported = 0  # Tracks unsupported files
-    errors = 0  # Tracks errors
-    
-    remaining = collection.count_documents({})  
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
@@ -82,43 +71,18 @@ async def send_videos(bot):
         # Check if the file already exists in the saved collection
         existing_file = savecollection.find_one({'$or': [{'file_id': file_id}, {'file_name': file_name}]})
         if existing_file:
-            duplicate += 1
             print(f"{file_name} is already saved in the database. Skipping...")
             continue  # Skip this file and move to the next one
-
+        
         if file_id:
             # Save and send file only if it's not a duplicate
-            try:
-                success, _ = await save_file(bot, file_name, file_id)
-                if success:
-                    total_files += 1
-                    await asyncio.sleep(3)
-            except Exception as e:
-                errors += 1
-                print(f"Error saving or sending file {file_name}: {e}")
+            success, _ = await save_file(bot, file_name, file_id)
+            
+            # Wait for 3 seconds only if the file was sent successfully
+            if success:
+                await asyncio.sleep(3)
         else:
-            no_media += 1
             print(f"File ID not found for video: {video.get('file_name')}")
-
-        current += 1
-        remaining -= 1
-
-        if current % 200 == 0:
-            try:
-                await bot.send_message(
-                    text=(
-                        f"Total messages fetched: <code>{current}</code>\n"
-                        f"Total messages saved: <code>{total_files}</code>\n"
-                        f"Remaining Messages: <code>{remaining}</code>\n"
-                        f"Duplicate Files Skipped: <code>{duplicate}</code>\n"
-                        f"Deleted Messages Skipped: <code>{deleted}</code>\n"
-                        f"Non-Media messages skipped: <code>{no_media + unsupported}</code>\n"
-                        f"Errors Occurred: <code>{errors}</code>"
-                    ),
-                )
-            except Exception as e:
-                print(f"Error editing message text: {e}")
-
 
 
 async def start():
