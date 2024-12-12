@@ -40,46 +40,50 @@ CHANNEL_ID = "-1002491425774"
 
 async def save_file(bot, file_name, file_id):
     """Save file in database, check for duplicates"""
-    # Check if the file already exists in the database based on file_id or file_name
-    existing_file = savecollection.find_one({'$or': [{'file_id': file_id}, {'file_name': file_name}]})
-    
-    if existing_file:
-        print(f"{file_name} is already saved in the database. Skipping...")
-        return False, 0  # Return False as file is already in database
-    
-    # If not duplicate, proceed to save the file
     file = {
         'file_id': file_id,
         'file_name': file_name
     }
     try:
+        # Try inserting the file into the saved collection
         savecollection.insert_one(file)
-        #print(f"Attempting to send file: {file_name}")
         
-        # Validate file_id before sending
+        # Validate and send video
         try:
             await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-            #print(f"{file_name} is successfully saved.")
+            print(f"{file_name} is successfully saved and sent.")
             return True, 1
         except ValueError:
             print(f"Invalid file ID: {file_id}. Skipping.")
             return False, 0
-            
     except DuplicateKeyError:
+        # File already exists in DB, skipping
         print(f"{file_name} is already saved in the database. Skipping.")
-        return False, 0  # File already exists in DB, skipping
+        return False, 0
 
-# Function to get videos from MongoDB and send to channel
+
 async def send_videos(bot):
     videos = collection.find()  # Get all video documents from MongoDB
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
+        
+        # Check if the file already exists in the saved collection
+        existing_file = savecollection.find_one({'$or': [{'file_id': file_id}, {'file_name': file_name}]})
+        if existing_file:
+            print(f"{file_name} is already saved in the database. Skipping...")
+            continue  # Skip this file and move to the next one
+        
         if file_id:
-            await save_file(bot, file_name, file_id)  # Send the video to the channel
-            await asyncio.sleep(3)  # Delay of 3 seconds between sending videos
+            # Save and send file only if it's not a duplicate
+            success, _ = await save_file(bot, file_name, file_id)
+            
+            # Wait for 3 seconds only if the file was sent successfully
+            if success:
+                await asyncio.sleep(3)
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
+
 
 
 async def start():
