@@ -51,7 +51,7 @@ async def save_file(bot, file_name, file_id):
         # Validate and send video
         try:
             await bot.send_video(chat_id=CHANNEL_ID, video=file_id, caption=file_name)
-            print(f"{file_name} is successfully saved and sent.")
+            #print(f"{file_name} is successfully saved and sent.")
             return True, 1
         except ValueError:
             print(f"Invalid file ID: {file_id}. Skipping.")
@@ -114,7 +114,7 @@ async def start():
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
     await VIP.start()
-    await send_videos(TechKPBot)
+    #await send_videos(TechKPBot)
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
