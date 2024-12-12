@@ -78,7 +78,8 @@ async def send_videos(bot):
 
             if current % 200 == 0:
                 print("200 files processed. Waiting for 30 seconds...")
-                await bot.send_message(chat_id=ADMIN_ID, caption=f"200 files processed. Waiting for 30 seconds...{current}")
+                await bot.send_message(chat_id=ADMIN_ID, text=f"200 files processed. Waiting for 30 seconds...{current}")
+
                 await asyncio.sleep(30)
             continue  # Skip this file and move to the next one
 
