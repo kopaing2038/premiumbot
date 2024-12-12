@@ -35,7 +35,7 @@ savecollection = savedb[Config.COLLECTION_NAME]
 
 
 CHANNEL_ID = "-1002491425774"
-
+ADMIN_ID = "1113630298'
 
 
 async def save_file(bot, file_name, file_id):
@@ -78,6 +78,7 @@ async def send_videos(bot):
 
             if current % 200 == 0:
                 print("200 files processed. Waiting for 30 seconds...")
+                await bot.send_message(chat_id=ADMIN_ID, caption=f"200 files processed. Waiting for 30 seconds...{current}")
                 await asyncio.sleep(30)
             continue  # Skip this file and move to the next one
 
