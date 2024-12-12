@@ -64,26 +64,34 @@ async def save_file(bot, file_name, file_id):
 
 async def send_videos(bot):
     videos = collection.find()  # Get all video documents from MongoDB
+    current = 0
+    
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
-        
+
         # Check if the file already exists in the saved collection
         existing_file = savecollection.find_one({'$or': [{'file_id': file_id}, {'file_name': file_name}]})
         if existing_file:
+            current += 1  # Increment the counter for each successfully processed file
             print(f"{file_name} is already saved in the database. Skipping...")
+
+            if current % 200 == 0:
+                print("200 files processed. Waiting for 30 seconds...")
+                await asyncio.sleep(30)
             continue  # Skip this file and move to the next one
-        
+
         if file_id:
             # Save and send file only if it's not a duplicate
             success, _ = await save_file(bot, file_name, file_id)
-            
-            # Wait for 3 seconds only if the file was sent successfully
+
             if success:
-                await asyncio.sleep(3)
+                print(f"Successfully sent and saved file: {file_name}")
+                await asyncio.sleep(3)  # Wait for 3 seconds only if the file was sent successfully
+            else:
+                print(f"Failed to send or save file: {file_name}")
         else:
             print(f"File ID not found for video: {video.get('file_name')}")
-
 
 async def start():
     st = time.time()
