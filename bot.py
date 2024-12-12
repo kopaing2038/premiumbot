@@ -73,8 +73,8 @@ async def send_videos(bot):
     no_media = 0  # Tracks non-media messages
     unsupported = 0  # Tracks unsupported files
     errors = 0  # Tracks errors
-    remaining = videos.count_documents({})  # Total remaining videos to process
-
+    
+    remaining = collection.count_documents({})  
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
