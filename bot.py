@@ -63,9 +63,10 @@ async def save_file(bot, file_name, file_id):
 
 
 async def send_videos(bot):
-    videos = collection.find()  # Get all video documents from MongoDB
-    current = 0
+    skip = 33000  # Number of files to skip
+    current = skip  # Start current at -skip to adjust for skipped files
     
+    videos = collection.find().skip(skip) 
     for video in videos:
         file_id = video.get("file_id")  # Get the file_id from the MongoDB document
         file_name = video.get("file_name")
