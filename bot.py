@@ -34,8 +34,8 @@ savedb = saveclient[Config.SESSION_NAME]
 savecollection = savedb[Config.COLLECTION_NAME]
 
 
-CHANNEL_ID = "-1002491425774"
-ADMIN_ID = "1113630298"
+CHANNEL_ID = -1002491425774
+ADMIN_ID = 1113630298
 
 
 async def save_file(bot, file_name, file_id):
