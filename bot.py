@@ -63,7 +63,7 @@ async def save_file(bot, file_name, file_id):
 
 
 async def send_videos(bot):
-    skip = 57750  # Number of files to skip
+    skip = 59600  # Number of files to skip
     current = skip  # Start current at -skip to adjust for skipped files
     
     videos = collection.find().skip(skip) 
