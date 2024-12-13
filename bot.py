@@ -124,7 +124,7 @@ async def start():
   #  bind_address = "0.0.0.0"
   #  await web.TCPSite(runner, bind_address, PORT).start()
     await VIP.start()
-    await send_videos(TechKPBot)
+    #await send_videos(TechKPBot)
     await TechKPBot.send_message(
         chat_id=Config.LOG_CHANNEL,
         text=(
